@@ -101,7 +101,7 @@ const Home = () => {
                   <div className="top-cta-content">
                     <h3>Strawberry Cake</h3>
                     <h6>Simple &amp; Delicios</h6>
-                    <a href="receipe-post.html" className="btn delicious-btn">See Full Receipe</a>
+                    <a href="/Recipe" className="btn delicious-btn">See Full Receipe</a>
                   </div>
                 </div>
               </div>
@@ -113,7 +113,7 @@ const Home = () => {
                   <div className="top-cta-content">
                     <h3>Chinesse Noodles</h3>
                     <h6>Simple &amp; Delicios</h6>
-                    <a href="receipe-post.html" className="btn delicious-btn">See Full Receipe</a>
+                    <a href="/Recipe" className="btn delicious-btn">See Full Receipe</a>
                   </div>
                 </div>
               </div>
@@ -137,7 +137,7 @@ const Home = () => {
                 <div className="single-best-receipe-area mb-30">
                   <img src={Sushi} alt=""/>
                   <div className="receipe-content">
-                    <a href="receipe-post.html">
+                    <a href="/Recipe">
                       <h5>Sushi Easy Receipy</h5>
                     </a>
                     <div className="ratings">
@@ -155,7 +155,7 @@ const Home = () => {
                 <div className="single-best-receipe-area mb-30">
                   <img src={HomemadeBurger} alt=""/>
                   <div className="receipe-content">
-                    <a href="receipe-post.html">
+                    <a href="/Recipe">
                       <h5>Homemade Burger</h5>
                     </a>
                     <div className="ratings">
@@ -173,7 +173,7 @@ const Home = () => {
                 <div className="single-best-receipe-area mb-30">
                   <img src={VeganSmoothie} alt=""/>
                   <div className="receipe-content">
-                    <a href="receipe-post.html">
+                    <a href="/Recipe">
                       <h5>Vegan Smoothie</h5>
                     </a>
                     <div className="ratings">
@@ -191,7 +191,7 @@ const Home = () => {
                 <div className="single-best-receipe-area mb-30">
                   <img src={r4} alt=""/>
                   <div className="receipe-content">
-                    <a href="receipe-post.html">
+                    <a href="/Recipe">
                       <h5>Calabasa soup</h5>
                     </a>
                     <div className="ratings">
@@ -209,7 +209,7 @@ const Home = () => {
                 <div className="single-best-receipe-area mb-30">
                   <img src={r5} alt=".."/>
                   <div className="receipe-content">
-                    <a href="receipe-post.html">
+                    <a href="/Recipe">
                       <h5>Homemade Breakfast</h5>
                     </a>
                     <div className="ratings">
@@ -227,7 +227,7 @@ const Home = () => {
                 <div className="single-best-receipe-area mb-30">
                   <img src={r6} alt=""/>
                   <div className="receipe-content">
-                    <a href="receipe-post.html">
+                    <a href="/Recipe">
                       <h5>Healthy Fruit Desert</h5>
                     </a>
                     <div className="ratings">
@@ -276,7 +276,7 @@ const Home = () => {
                   {/* Receipe Content */}
                   <div className="receipe-content">
                     <span>January 04, 2018</span>
-                    <a href="receipe-post.html">
+                    <a href="/Recipe">
                       <h5>Homemade italian pasta</h5>
                     </a>
                     <div className="ratings">
@@ -300,7 +300,7 @@ const Home = () => {
                   {/* Receipe Content */}
                   <div className="receipe-content">
                     <span>January 04, 2018</span>
-                    <a href="receipe-post.html">
+                    <a href="/Recipe">
                       <h5>Baked Bread</h5>
                     </a>
                     <div className="ratings">
@@ -324,7 +324,7 @@ const Home = () => {
                   {/* Receipe Content */}
                   <div className="receipe-content">
                     <span>January 04, 2018</span>
-                    <a href="receipe-post.html">
+                    <a href="/Recipe">
                       <h5>Scalops on salt</h5>
                     </a>
                     <div className="ratings">
@@ -348,7 +348,7 @@ const Home = () => {
                   {/* Receipe Content */}
                   <div className="receipe-content">
                     <span>January 04, 2018</span>
-                    <a href="receipe-post.html">
+                    <a href="/Recipe">
                       <h5>Fruits on plate</h5>
                     </a>
                     <div className="ratings">
@@ -372,7 +372,7 @@ const Home = () => {
                   {/* Receipe Content */}
                   <div className="receipe-content">
                     <span>January 04, 2018</span>
-                    <a href="receipe-post.html">
+                    <a href="/Recipe">
                       <h5>Macaroons</h5>
                     </a>
                     <div className="ratings">
@@ -396,7 +396,7 @@ const Home = () => {
                   {/* Receipe Content */}
                   <div className="receipe-content">
                     <span>January 04, 2018</span>
-                    <a href="receipe-post.html">
+                    <a href="/Recipe">
                       <h5>Chocolate tart</h5>
                     </a>
                     <div className="ratings">
@@ -420,7 +420,7 @@ const Home = () => {
                   {/* Receipe Content */}
                   <div className="receipe-content">
                     <span>January 04, 2018</span>
-                    <a href="receipe-post.html">
+                    <a href="/Recipe">
                       <h5>Berry Desert</h5>
                     </a>
                     <div className="ratings">
@@ -444,7 +444,7 @@ const Home = () => {
                   {/* Receipe Content */}
                   <div className="receipe-content">
                     <span>January 04, 2018</span>
-                    <a href="receipe-post.html">
+                    <a href="/Recipe">
                       <h5>Zucchini Grilled on peper</h5>
                     </a>
                     <div className="ratings">
@@ -468,7 +468,7 @@ const Home = () => {
                   {/* Receipe Content */}
                   <div className="receipe-content">
                     <span>January 04, 2018</span>
-                    <a href="receipe-post.html">
+                    <a href="/Recipe">
                       <h5>Chicken Salad</h5>
                     </a>
                     <div className="ratings">

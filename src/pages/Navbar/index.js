@@ -88,6 +88,8 @@ const Navbar = () => {
                       </li>
                       <li className={splitLocation[1] === "Elements" ? "active" : ""}><Link
                         to="/Elements">Elements</Link></li>
+                      <li className={splitLocation[1] === "Reserve" ? "active" : ""}><Link
+                        to="/Reserve">Reserve</Link></li>
                       {/*<li><Link to="#">Pages</Link>*/}
                       {/*  <ul className="dropdown">*/}
                       {/*    <li><Link to="/">Home</Link></li>*/}

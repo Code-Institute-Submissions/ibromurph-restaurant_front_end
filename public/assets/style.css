@@ -3312,3 +3312,16 @@ select.input {
 .date_selector {
     height: 2.9375rem !important;
 }
+.color-text-green{
+    color: #40ba37;
+
+}
+.opentable-slots__time {
+    width: 100%;
+    padding-left: 10px;
+    padding-right: 10px
+}
+
+.opentable-slots--compact .opentable-slots__time {
+    padding: 7px 10px
+}

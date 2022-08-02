@@ -1,11 +1,30 @@
-import { Fragment } from "react";
+import {Fragment, useState} from "react";
 import Navbar from "./Navbar";
 import bc2 from "../assets/img/bg-img/breadcumb2.jpg";
 import Instagram from "./Instagram";
 import Footer from "./Footer";
 import bi1 from "../assets/img/blog-img/1.jpg";
+import {Form,} from "react-bootstrap";
+import { Formik } from "formik";
+import * as yup from "yup";
+import {Time_Hours} from './DataFiles/Time'
+import {Slots} from './DataFiles/Slots'
+
+
+
+const schemaBookTable = yup.object({
+  Time: yup.string().required("Please Pick Time"),
+  PartySize:yup.string().required("choose party time"),
+  Date_event:yup.string().required("Select Date"),
+});
 
 const Reserve = () => {
+  const [show, setShow] = useState(false);
+  const [showTwo, setShowTwo] = useState(false);
+  const TableOne=()=>{
+    setShow(true)
+    setShowTwo(true)
+  }
   return (
     <Fragment>
       <Navbar />
@@ -34,179 +53,307 @@ const Reserve = () => {
                     <img src={bi1} alt="" />
                   </div>
                   {/* Content */}
-                  <main className="engine">
-                    <header className="engine__header">
-                      <h1 className="title post-title-green">Book a table</h1>
-                      <div className="richtext engine__intro">
-                        <p>We look forward to welcoming you back.</p>
-                        <p>
-                          Please note that we require card details to secure
-                          your booking. In the event that the reservation is not
-                          cancelled with 24 hours' notice, it will result in a
-                          charge of <b>£25</b> per guest.
-                        </p>
-                      </div>
-                    </header>
-                    <div className="opentable opentable--search">
-                      <form
-                        action
-                        method="POST"
-                        className="opentable-search"
-                        id="reservation"
-                        autcomplete="off"
-                      >
-                        <input
-                          type="hidden"
-                          name="action"
-                          defaultValue="search"
-                        />
-                        {/*Time*/}
-                        <div
-                          id="reservation_sitting_wrap"
-                          className="field field--select-callback required field-select"
-                        >
-                          <label
-                            className="field__label"
-                            htmlFor="reservation_sitting"
-                          >
-                            Choose time<span> *</span>
-                          </label>
-                          <div className="select-replace" id="reservation_sitting_selectreplace">
-                            <select
-                              id="reservation_sitting"
-                              name="reservation_sitting"
-                              className="input"
-                            >
-                              <option value="11:00 AM">11:00 AM</option>
-                              <option value="11:15 AM">11:15 AM</option>
-                              <option value="11:30 AM">11:30 AM</option>
-                              <option value="11:45 AM">11:45 AM</option>
-                              <option value="12:00 PM">12:00 PM</option>
-                              <option value="12:15 PM">12:15 PM</option>
-                              <option value="12:30 PM">12:30 PM</option>
-                              <option value="12:45 PM">12:45 PM</option>
-                              <option value="01:00 PM">01:00 PM</option>
-                              <option value="01:15 PM">01:15 PM</option>
-                              <option value="01:30 PM">01:30 PM</option>
-                              <option value="01:45 PM">01:45 PM</option>
-                              <option value="02:00 PM">02:00 PM</option>
-                              <option value="02:15 PM">02:15 PM</option>
-                              <option value="02:30 PM">02:30 PM</option>
-                              <option value="02:45 PM">02:45 PM</option>
-                              <option value="03:00 PM">03:00 PM</option>
-                              <option value="03:15 PM">03:15 PM</option>
-                              <option value="03:30 PM">03:30 PM</option>
-                              <option value="03:45 PM">03:45 PM</option>
-                              <option value="04:00 PM">04:00 PM</option>
-                              <option value="04:15 PM">04:15 PM</option>
-                              <option value="04:30 PM">04:30 PM</option>
-                              <option value="04:45 PM">04:45 PM</option>
-                              <option value="05:00 PM">05:00 PM</option>
-                              <option value="05:15 PM">05:15 PM</option>
-                              <option value="05:30 PM">05:30 PM</option>
-                              <option value="05:45 PM">05:45 PM</option>
-                              <option value="06:00 PM">06:00 PM</option>
-                              <option value="06:15 PM">06:15 PM</option>
-                              <option value="06:30 PM">06:30 PM</option>
-                              <option value="06:45 PM">06:45 PM</option>
-                              <option value="07:00 PM">07:00 PM</option>
-                              <option value="07:15 PM">07:15 PM</option>
-                              <option value="07:30 PM">07:30 PM</option>
-                              <option value="07:45 PM">07:45 PM</option>
-                              <option value="08:00 PM">08:00 PM</option>
-                              <option value="08:15 PM">08:15 PM</option>
-                              <option value="08:30 PM">08:30 PM</option>
-                              <option value="08:45 PM">08:45 PM</option>
-                              <option value="09:00 PM">09:00 PM</option>
-                              <option value="09:15 PM">09:15 PM</option>
-                              <option value="09:30 PM">09:30 PM</option>
-                              <option value="09:45 PM">09:45 PM</option>
-                              <option value="10:00 PM">10:00 PM</option>
-                              <option value="10:15 PM">10:15 PM</option>
-                              <option value="10:30 PM">10:30 PM</option>
-                              <option value="10:45 PM">10:45 PM</option>
-                            </select>
-                            <p className="select-replace__value">12:00 PM</p>
-                          </div>
-                        </div>
-                        {/*Party Size*/}
-                        <div
-                          id="reservation_partysize_wrap"
-                          className="field field--select-callback required field-alt field-select"
-                        >
-                          <label
-                            className="field__label"
-                            htmlFor="reservation_partysize"
-                          >
-                            Party size<span> *</span>
-                          </label>
-                          <div
-                            className="select-replace"
-                            id="reservation_partysize_selectreplace"
-                          >
-                            <select
-                              id="reservation_partysize"
-                              name="reservation_partysize"
-                              className="input"
-                            >
-                              <option value="{1}">1</option>
-                              <option value="{2}" selected="selected">
-                                2
-                              </option>
-                              <option value="{3}">3</option>
-                              <option value="{4}">4</option>
-                              <option value="{5}">5</option>
-                              <option value="{6}">6</option>
-                            </select>
-                            <p className="select-replace__value">2</p>
-                          </div>
-                        </div>
-                        {/*Date*/}
 
-                        <div
-                          id="reservation_partysize_wrap"
-                          className="field field--select-callback required field-alt field-select"
-                        >
-                          <label
-                            className="field__label"
-                            htmlFor="reservation_partysize"
-                          >
-                            Choose Date<span> *</span>
-                          </label>
-                          <div
-                            className="select-replace"
-                            id="reservation_partysize_selectreplace"
-                          >
-                            <input
-                              type="date"
-                              className="date_selector"
-                              name="birthday"
-                            />
-                          </div>
+
+
+
+
+                  <main className="engine" id="table-one" >
+
+
+
+                    <div style={{display:show===true?'None':''}}>
+                      <header className="engine__header">
+                        <h1 className="title color-text-green">Book a table</h1>
+                        <div className="richtext engine__intro">
+                          <p>We look forward to welcoming you back.</p>
+                          <p>
+                            Please note that we require card details to secure
+                            your booking. In the event that the reservation is not
+                            cancelled with 24 hours' notice, it will result in a
+                            charge of <b>£25</b> per guest.
+                          </p>
                         </div>
-                        <div
-                          id="reservation_partysize_wrap"
-                          className="field field--select-callback required field-alt field-select"
+                      </header>
+                      <div className="opentable opentable--search">
+                        <Formik
+                          validationSchema={schemaBookTable}
+                          onSubmit={(values) => TableOne(values)}
+                          initialValues={{
+                            Time: "",
+                            PartySize: "",
+                            Date_event: "",
+                          }}
                         >
-                          <label
-                            className="field__label"
-                            htmlFor="reservation_partysize"
-                          >
-                            &nbsp;
-                          </label>
-                          <div
-                            className="select-replace text-center mt-2"
-                            id="reservation_partysize_selectreplace"
-                          >
-                            <button type="button" className="btn btn-green p-2">
-                              Check Availability
+                          {({
+                              handleSubmit,
+                              handleChange,
+                              values,
+                              touched,
+                              errors,
+                            }) => (
+                            <Form
+                              className="opentable-search"
+                              id="reservation"
+                              autcomplete="off"
+                              noValidate
+                              onSubmit={handleSubmit}
+                            >
+                              <input
+                                type="hidden"
+                                name="action"
+                                defaultValue="search"
+                              />
+                              {/*Time*/}
+                              <div
+                                id="reservation_sitting_wrap"
+                                className="field field--select-callback required field-select"
+                              >
+                                <label
+                                  className="field__label"
+                                  htmlFor="reservation_sitting"
+                                >
+                                  Choose time<span> *</span>
+                                </label>
+                                <div id="reservation_sitting_selectreplace">
+                                  <Form.Select
+                                    id="reservation_sitting"
+                                    name="reservation_sitting"
+                                    className="input"
+                                    isInvalid={!!errors.Time}
+                                    onChange={(e, event) => {
+                                      handleChange({
+                                        ...event,
+                                        target: {
+                                          name: "Time",
+                                          value: e.target.value
+                                        }
+                                      });
+                                    }}
+                                  >
+                                    {Time_Hours.map((arr,key)=>(
+                                      <option key={key} value={arr.value}>{arr.label}</option>))}
+                                  </Form.Select>
+                                  <Form.Control.Feedback type="invalid">
+                                    {errors.Time}
+                                  </Form.Control.Feedback>
+                                </div>
+                              </div>
+                              {/*Party Size*/}
+
+
+
+
+                              <div
+                                id="reservation_partysize_wrap"
+                                className="field field--select-callback required field-alt field-select"
+                              >
+                                <label
+                                  className="field__label"
+                                  htmlFor="reservation_partysize"
+                                >
+                                  Party size<span> *</span>
+                                </label>
+                                <div id="reservation_partysize_selectreplace">
+                                  <Form.Select
+                                    id="reservation_partysize"
+                                    name="reservation_partysize"
+                                    className="input"
+                                    isInvalid={!!errors.PartySize}
+                                    onChange={(e, event) => {
+                                      handleChange({
+                                        ...event,
+                                        target: {
+                                          name: "PartySize",
+                                          value: e.target.value
+                                        }
+                                      });
+                                    }}
+                                  >
+                                    {Slots.map((arr,key)=>(
+                                      <option key={key} value={arr.value}>{arr.label}</option>
+                                    ))}
+                                  </Form.Select>
+                                  <Form.Control.Feedback type="invalid">
+                                    {errors.PartySize}
+                                  </Form.Control.Feedback>
+                                </div>
+                              </div>
+                              {/*Date*/}
+
+                              <div
+                                id="reservation_partysize_wrap"
+                                className="field field--select-callback required field-alt field-select"
+                              >
+                                <label
+                                  className="field__label"
+                                  htmlFor="reservation_partysize"
+                                >
+                                  Choose Date<span> *</span>
+                                </label>
+                                <div
+                                  className="select-replace"
+                                  id="reservation_partysize_selectreplace"
+                                >
+                                  <Form.Control type="date" name="Date_event"
+                                                onChange={handleChange}
+                                                isInvalid={!!errors.Date_event}
+                                                className="date_selector" />
+                                  <Form.Control.Feedback type="invalid">
+                                    {errors.Date_event}
+                                  </Form.Control.Feedback>
+                                </div>
+                              </div>
+                              <div
+                                id="reservation_partysize_wrap"
+                                className="field field--select-callback required field-alt field-select"
+                              >
+                                <label
+                                  className="field__label"
+                                  htmlFor="reservation_partysize"
+                                >
+                                  &nbsp;
+                                </label>
+                                <div
+                                  className="select-replace text-center mt-2"
+                                  id="reservation_partysize_selectreplace"
+                                >
+                                  <button
+                                    type="button"
+                                    type="submit"
+                                    className="btn btn-green p-2"
+                                  >
+                                    Check Availability
+                                  </button>
+                                </div>
+                              </div>
+                            </Form>
+                          )}
+                        </Formik>
+                      </div>
+                      <i className="icon icon--calendar-white opentable-search__datepicker-icon"></i>
+                    </div>
+
+
+
+
+                    <div style={{display:showTwo===false?'None':''}}>
+                      <header className="engine__header">
+                        <h1 className="title color-text-green">CHOOSE A TIME</h1>
+                        <div className="richtext engine__intro">
+                          <p>Booking for <span className="color-text-green">5</span> people on <span className="color-text-green">Saturday 6th August</span>.</p>
+                        </div>
+                      </header>
+                      <div className="opentable opentable--search">
+                        <div className="row mt-3 mb-3">
+                          <div className="col-3">
+                            <button type="submit" className="btn btn-green opentable-slots__time">
+                              <span>18:00 </span>
+                            </button>
+                          </div>
+                          <div className="col-3">
+                            <button type="submit" className="btn btn-green opentable-slots__time">
+                              <span>18:00 </span>
+                            </button>
+                          </div>
+                          <div className="col-3">
+                            <button type="submit" className="btn btn-green opentable-slots__time">
+                              <span>18:00 </span>
+                            </button>
+                          </div>
+                          <div className="col-3">
+                            <button type="submit" className="btn btn-green opentable-slots__time">
+                              <span>18:00 </span>
                             </button>
                           </div>
                         </div>
-                      </form>
+                        <div className="row mt-3 mb-3">
+                          <div className="col-3">
+                            <button type="submit" className="btn btn-green opentable-slots__time">
+                              <span>18:00 </span>
+                            </button>
+                          </div>
+                          <div className="col-3">
+                            <button type="submit" className="btn btn-green opentable-slots__time">
+                              <span>18:00 </span>
+                            </button>
+                          </div>
+                          <div className="col-3">
+                            <button type="submit" className="btn btn-green opentable-slots__time">
+                              <span>18:00 </span>
+                            </button>
+                          </div>
+                          <div className="col-3">
+                            <button type="submit" className="btn btn-green opentable-slots__time">
+                              <span>18:00 </span>
+                            </button>
+                          </div>
+                        </div>
+                        <div className="row mt-3 mb-3">
+                          <div className="col-3">
+                            <button type="submit" className="btn btn-green opentable-slots__time">
+                              <span>18:00 </span>
+                            </button>
+                          </div>
+                          <div className="col-3">
+                            <button type="submit" className="btn btn-green opentable-slots__time">
+                              <span>18:00 </span>
+                            </button>
+                          </div>
+                          <div className="col-3">
+                            <button type="submit" className="btn btn-green opentable-slots__time">
+                              <span>18:00 </span>
+                            </button>
+                          </div>
+                          <div className="col-3">
+                            <button type="submit" className="btn btn-green opentable-slots__time">
+                              <span>18:00 </span>
+                            </button>
+                          </div>
+                        </div>
+                        <div className="row mt-3 mb-3">
+                          <div className="col-3">
+                            <button type="submit" className="btn btn-green opentable-slots__time">
+                              <span>18:00 </span>
+                            </button>
+                          </div>
+                          <div className="col-3">
+                            <button type="submit" className="btn btn-green opentable-slots__time">
+                              <span>18:00 </span>
+                            </button>
+                          </div>
+                          <div className="col-3">
+                            <button type="submit" className="btn btn-green opentable-slots__time">
+                              <span>18:00 </span>
+                            </button>
+                          </div>
+                          <div className="col-3">
+                            <button type="submit" className="btn btn-green opentable-slots__time">
+                              <span>18:00 </span>
+                            </button>
+                          </div>
+                        </div>
+
+                      </div>
+                      <header className="engine__header">
+                        <div className="engine__intro">
+                        </div>
+
+                      </header>
+                      <p><span className="color-text-green text-capitalize">SEARCH AGAIN</span></p>
+
                     </div>
-                    <i className="icon icon--calendar-white opentable-search__datepicker-icon"></i>
+
+
                   </main>
+
+
+
+
+
+
+
+
                   <i className="icon icon--calendar-white opentable-search__datepicker-icon"></i>
                   <div className="blog-content">
                     <h2

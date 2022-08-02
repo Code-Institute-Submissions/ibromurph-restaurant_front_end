@@ -4,9 +4,6 @@ import bc2 from "../assets/img/bg-img/breadcumb2.jpg";
 import Instagram from "./Instagram";
 import Footer from "./Footer";
 import bi1 from "../assets/img/blog-img/1.jpg";
-import bi2 from "../assets/img/blog-img/2.jpg";
-import bi3 from "../assets/img/blog-img/3.jpg";
-import bg1 from "../assets/img/bg-img/bg1.jpg";
 
 const Reserve = () => {
   return (
@@ -46,7 +43,7 @@ const Reserve = () => {
                           Please note that we require card details to secure
                           your booking. In the event that the reservation is not
                           cancelled with 24 hours' notice, it will result in a
-                          charge of £25 per guest.
+                          charge of <b>£25</b> per guest.
                         </p>
                       </div>
                     </header>
@@ -74,10 +71,7 @@ const Reserve = () => {
                           >
                             Choose time<span> *</span>
                           </label>
-                          <div
-                            className="select-replace"
-                            id="reservation_sitting_selectreplace"
-                          >
+                          <div className="select-replace" id="reservation_sitting_selectreplace">
                             <select
                               id="reservation_sitting"
                               name="reservation_sitting"
@@ -87,9 +81,7 @@ const Reserve = () => {
                               <option value="11:15 AM">11:15 AM</option>
                               <option value="11:30 AM">11:30 AM</option>
                               <option value="11:45 AM">11:45 AM</option>
-                              <option value="12:00 PM" selected="selected">
-                                12:00 PM
-                              </option>
+                              <option value="12:00 PM">12:00 PM</option>
                               <option value="12:15 PM">12:15 PM</option>
                               <option value="12:30 PM">12:30 PM</option>
                               <option value="12:45 PM">12:45 PM</option>

@@ -2092,9 +2092,13 @@ textarea:focus {
 
 @media screen and (max-width: 60em) {
     .engine {
-        padding: 40px 10%
+        padding: 40px 10%;
+
     }
 }
+
+/*.engine {*/
+/*}*/
 
 .banner + .engine {
     margin-top: -200px
@@ -2102,7 +2106,15 @@ textarea:focus {
 
 @media screen and (max-width: 60em) {
     .banner + .engine {
-        margin-top: -100px
+        margin-top: -100px;
+
+    }
+}
+
+@media screen and (min-width: 60em) {
+    .banner + .engine {
+        margin-left: 100px !important;
+
     }
 }
 

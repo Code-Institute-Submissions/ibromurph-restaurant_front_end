@@ -6,6 +6,7 @@ import BlogPost from "../pages/BlogPost";
 import Contact from "../pages/Contact";
 import Elements from "../pages/elements";
 import Recipe from "../pages/Recipe";
+import Reserve from "../pages/Reserve";
 
 
 const Navigation = () => {
@@ -18,7 +19,7 @@ const Navigation = () => {
         <Route path="/Contact" element={<Contact/>}/>
         <Route path="/Elements" element={<Elements/>}/>
         <Route path="/Recipe" element={<Recipe/>}/>
-
+        <Route path="/Reserve" element={<Reserve/>}/>
       </Routes>
     </BrowserRouter>
   )

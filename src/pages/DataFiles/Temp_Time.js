@@ -1,0 +1,18 @@
+export const Temp_Time = [
+  { value: "11:00 AM", label: "11:00 AM" },
+  { value: "11:15 AM", label: "11:00 AM" },
+  { value: "11:30 AM", label: "11:00 AM" },
+  { value: "11:45 AM", label: "11:00 AM" },
+  { value: "12:00 AM", label: "11:00 AM" },
+  { value: "12:15 AM", label: "11:00 AM" },
+  { value: "12:30 AM", label: "11:00 AM" },
+  { value: "12:45 AM", label: "11:00 AM" },
+  { value: "1:00 AM", label: "11:00 AM" },
+  { value: "1:15 AM", label: "11:00 AM" },
+  { value: "1:30 AM", label: "11:00 AM" },
+  { value: "1:45 AM", label: "11:00 AM" },
+  { value: "2:00 AM", label: "11:00 AM" },
+  { value: "2:15 AM", label: "11:00 AM" },
+  { value: "2:30 AM", label: "11:00 AM" },
+  { value: "2:45 AM", label: "11:00 AM" },
+];

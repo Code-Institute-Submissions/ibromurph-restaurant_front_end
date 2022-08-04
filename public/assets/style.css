@@ -3325,3 +3325,29 @@ select.input {
 .opentable-slots--compact .opentable-slots__time {
     padding: 7px 10px
 }
+
+
+.underline_line {
+    position: relative;
+    padding-bottom: 30px;
+    margin-bottom: 30px
+}
+
+.underline_line:after {
+    content: "";
+    position: absolute;
+    bottom: 0;
+    left: 50%;
+    padding-bottom: 0px;
+    margin-bottom: 0px;
+    height: 1px;
+    width: 100%;
+    max-width: 300px;
+    -webkit-transform: translateX(-50%);
+    transform: translateX(-50%);
+    background: radial-gradient(ellipse 50% 1px, #ccc, transparent)
+}
+
+.underline_line :last-child {
+    margin-bottom: 0
+}

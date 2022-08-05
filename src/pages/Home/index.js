@@ -25,6 +25,10 @@ import add from '../../assets/img/bg-img/add.png'
 import Instagram from "../Instagram";
 import Navbar from "../Navbar";
 import Footer from "../Footer";
+import {Carousel} from "react-bootstrap";
+import bi1 from "../../assets/img/blog-img/1.jpg";
+import bi2 from "../../assets/img/blog-img/2.jpg";
+import bi3 from "../../assets/img/blog-img/3.jpg";
 
 const Home = () => {
 
@@ -32,64 +36,45 @@ const Home = () => {
     <Fragment>
       <div>
         <Navbar/>
-        {/* ##### Hero Area Start ##### */}
-        <section className="hero-area">
-          <div className="hero-slides owl-carousel">
-            {/* Single Hero Slide */}
-            <div className="single-hero-slide bg-img" style={{backgroundImage: `url(${bg1})`}}>
-              <div className="container h-100">
-                <div className="row h-100 align-items-center">
-                  <div className="col-12 col-md-9 col-lg-7 col-xl-6">
-                    <div className="hero-slides-content" data-animation="fadeInUp" data-delay="100ms">
-                      <h2 data-animation="fadeInUp" data-delay="300ms">Delicios Homemade Burger</h2>
-                      <p data-animation="fadeInUp" data-delay="700ms">Lorem ipsum dolor sit amet, consectetur adipiscing
-                        elit. Cras tristique nisl vitae luctus sollicitudin. Fusce consectetur sem eget dui tristique,
-                        ac posuere arcu varius.</p>
-                      <a href="#" className="btn delicious-btn" data-animation="fadeInUp" data-delay="1000ms">See
-                        Receipe</a>
-                    </div>
-                  </div>
-                </div>
-              </div>
-            </div>
-            {/* Single Hero Slide */}
-            <div className="single-hero-slide bg-img" style={{backgroundImage: `url(${bg6})`}}>
-              <div className="container h-100">
-                <div className="row h-100 align-items-center">
-                  <div className="col-12 col-md-9 col-lg-7 col-xl-6">
-                    <div className="hero-slides-content" data-animation="fadeInUp" data-delay="100ms">
-                      <h2 data-animation="fadeInUp" data-delay="300ms">Delicios Homemade Burger</h2>
-                      <p data-animation="fadeInUp" data-delay="700ms">Lorem ipsum dolor sit amet, consectetur adipiscing
-                        elit. Cras tristique nisl vitae luctus sollicitudin. Fusce consectetur sem eget dui tristique,
-                        ac posuere arcu varius.</p>
-                      <a href="#" className="btn delicious-btn" data-animation="fadeInUp" data-delay="1000ms">See
-                        Receipe</a>
-                    </div>
-                  </div>
-                </div>
-              </div>
-            </div>
-            {/* Single Hero Slide */}
-            <div className="single-hero-slide bg-img" style={{backgroundImage: `url(${bg7})`}}>
-              <div className="container h-100">
-                <div className="row h-100 align-items-center">
-                  <div className="col-12 col-md-9 col-lg-7 col-xl-6">
-                    <div className="hero-slides-content" data-animation="fadeInUp" data-delay="100ms">
-                      <h2 data-animation="fadeInUp" data-delay="300ms">Delicios Homemade Burger</h2>
-                      <p data-animation="fadeInUp" data-delay="700ms">Lorem ipsum dolor sit amet, consectetur adipiscing
-                        elit. Cras tristique nisl vitae luctus sollicitudin. Fusce consectetur sem eget dui tristique,
-                        ac posuere arcu varius.</p>
-                      <a href="#" className="btn delicious-btn" data-animation="fadeInUp" data-delay="1000ms">See
-                        Receipe</a>
-                    </div>
-                  </div>
-                </div>
-              </div>
-            </div>
-          </div>
-        </section>
-        {/* ##### Hero Area End ##### */}
-        {/* ##### Top Catagory Area Start ##### */}
+        <Carousel>
+          <Carousel.Item>
+            <img
+              className="d-block w-100"
+              src={bi1}
+              alt="First slide"
+            />
+            <Carousel.Caption>
+              <h3>First slide label</h3>
+              <p>Nulla vitae elit libero, a pharetra augue mollis interdum.</p>
+            </Carousel.Caption>
+          </Carousel.Item>
+          <Carousel.Item>
+            <img
+              className="d-block w-100"
+              src={bi2}
+              alt="Second slide"
+            />
+
+            <Carousel.Caption>
+              <h3>Second slide label</h3>
+              <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit.</p>
+            </Carousel.Caption>
+          </Carousel.Item>
+          <Carousel.Item>
+            <img
+              className="d-block w-100"
+              src={bi3}
+              alt="Third slide"
+            />
+
+            <Carousel.Caption>
+              <h3>Third slide label</h3>
+              <p>
+                Praesent commodo cursus magna, vel scelerisque nisl consectetur.
+              </p>
+            </Carousel.Caption>
+          </Carousel.Item>
+        </Carousel>
         <section className="top-catagory-area section-padding-80-0">
           <div className="container">
             <div className="row">

@@ -4,7 +4,7 @@ import bc2 from "../assets/img/bg-img/breadcumb2.jpg";
 import Instagram from "./Instagram";
 import Footer from "./Footer";
 import bi1 from "../assets/img/blog-img/1.jpg";
-import { Form } from "react-bootstrap";
+import {Col, Form, Row} from "react-bootstrap";
 import { Formik } from "formik";
 import * as yup from "yup";
 import { Time_Hours } from "./DataFiles/Time";
@@ -16,7 +16,14 @@ const schemaBookTable = yup.object({
   PartySize: yup.string().required("choose party time"),
   Date_event: yup.string().required("Select Date"),
 });
-
+const schemaBookTableDetails=yup.object({
+  // FirstName: "",
+  // LastName: "",
+  // Email: "",
+  // Number: "",
+  // TypeofBooking:'',
+  // GetEmails:''
+})
 const Reserve = () => {
   const [show, setShow] = useState(true);
   const [showTwo, setShowTwo] = useState(false);
@@ -34,12 +41,12 @@ const Reserve = () => {
     setShowThree(true);
   };
   const ReverseTableOne = () => {
-    setShow(false);
+    setShow(true);
     setShowTwo(false);
+    setShowThree(false);
   };
   return (
     <Fragment>
-      {console.log(show, showTwo, showThree)}
       <Navbar />
       <div
         className="breadcumb-area bg-img bg-overlay"
@@ -81,7 +88,7 @@ const Reserve = () => {
                       </header>
                       <div className="opentable opentable--search">
                         <Formik
-                          validationSchema={schemaBookTable}
+                          // validationSchema={schemaBookTable}
                           onSubmit={(values) => TableOne(values)}
                           initialValues={{
                             Time: "",
@@ -306,12 +313,15 @@ const Reserve = () => {
 
                       <div className="opentable opentable--details">
                         <Formik
-                          validationSchema={schemaBookTable}
-                          onSubmit={(values) => TableOne(values)}
+                          validationSchema={schemaBookTableDetails}
+                          onSubmit={(values) => console.log(values)}
                           initialValues={{
-                            Time: "",
-                            PartySize: "",
-                            Date_event: "",
+                            FirstName: "",
+                            LastName: "",
+                            Email: "",
+                            Number: "",
+                            TypeofBooking:'',
+                            GetEmails:''
                           }}
                         >
                           {({
@@ -322,9 +332,6 @@ const Reserve = () => {
                             errors,
                           }) => (
                             <Form
-                              className=""
-                              id="reservation"
-                              autcomplete="off"
                               noValidate
                               onSubmit={handleSubmit}
                             >
@@ -335,7 +342,6 @@ const Reserve = () => {
                                 <div className="row">
                                   <div className="col-12">
                                     <div className="contact-form-area">
-                                      <Form>
                                         <div className="row">
                                           <div className="col-12 col-lg-6">
                                             <Form.Label className="field__label">
@@ -349,7 +355,13 @@ const Reserve = () => {
                                               type="text"
                                               className="form-control"
                                               id="name"
+                                              name="FirstName"
+                                              onChange={handleChange}
+                                              isInvalid={!!errors.FirstName}
                                             />
+                                            <Form.Control.Feedback type="invalid">
+                                              {errors.FirstName}
+                                            </Form.Control.Feedback>
                                           </div>
                                           <div className="col-12 col-lg-6">
                                             <Form.Label className="field__label">
@@ -362,9 +374,14 @@ const Reserve = () => {
                                             <Form.Control
                                               type="text"
                                               className="form-control"
+                                              name="LastName"
+                                              onChange={handleChange}
+                                              isInvalid={!!errors.LastName}
                                             />
+                                            <Form.Control.Feedback type="invalid">
+                                              {errors.LastName}
+                                            </Form.Control.Feedback>
                                           </div>
-
                                           <div className="col-12 col-lg-6">
                                             <Form.Label className="field__label">
                                               EMAIL
@@ -377,7 +394,13 @@ const Reserve = () => {
                                               type="email"
                                               className="form-control"
                                               id="name"
+                                              name="Email"
+                                              onChange={handleChange}
+                                              isInvalid={!!errors.Email}
                                             />
+                                            <Form.Control.Feedback type="invalid">
+                                              {errors.Email}
+                                            </Form.Control.Feedback>
                                           </div>
                                           <div className="col-12 col-lg-6">
                                             <Form.Label className="field__label">
@@ -390,7 +413,13 @@ const Reserve = () => {
                                             <Form.Control
                                               type="text"
                                               className="form-control"
+                                              name="Number"
+                                              onChange={handleChange}
+                                              isInvalid={!!errors.Number}
                                             />
+                                            <Form.Control.Feedback type="invalid">
+                                              {errors.Number}
+                                            </Form.Control.Feedback>
                                           </div>
 
                                           <div className="col-12 col-lg-12">
@@ -404,51 +433,30 @@ const Reserve = () => {
                                                 *
                                               </span>
                                             </Form.Label>
+                                            <Form.Group as={Row}>
+                                              <Col sm={12}>
+                                                <Form.Check
+                                                  name="TypeofBooking"
+                                                  onChange={handleChange}
+                                                  type="switch"
+                                                  id="custom-switch"
+                                                  label="Check this switch"
+                                                />
 
-                                            <div className="form-check">
-                                              <input
-                                                className="form-check-input"
-                                                type="radio"
-                                                name="flexRadioDefault"
-                                                id="flexRadioDefault1"
-                                              />
-                                              <label
-                                                style={{
-                                                  textTransform: "unset",
-                                                }}
-                                                className="form-check-label"
-                                                htmlFor="flexRadioDefault1"
-                                              >
-                                                Yes
-                                              </label>
-                                            </div>
-                                            <div className="form-check">
-                                              <input
-                                                className="form-check-input"
-                                                type="radio"
-                                                name="flexRadioDefault"
-                                                id="flexRadioDefault2"
-                                                checked
-                                              />
-                                              <label
-                                                style={{
-                                                  textTransform: "unset",
-                                                }}
-                                                className="form-check-label"
-                                                htmlFor="flexRadioDefault2"
-                                              >
-                                                No
-                                              </label>
-                                            </div>
+                                              </Col>
+                                            </Form.Group>
                                           </div>
-
                                           <div className="col-12 col-lg-12 mt-2">
                                             <div className="form-check">
+
                                               <input
                                                 className="form-check-input"
                                                 type="checkbox"
                                                 value=""
                                                 id="flexCheckDefault"
+                                                name="GetEmails"
+                                                onChange={handleChange}
+
                                               />
                                               <label
                                                 className="form-check-label"
@@ -485,7 +493,6 @@ const Reserve = () => {
                                               link on our website.
                                             </Form.Text>
                                           </div>
-
                                           <div className="col-12 text-center">
                                             <button
                                               className="btn delicious-btn mt-30"
@@ -509,7 +516,6 @@ const Reserve = () => {
                                             </button>
                                           </div>
                                         </div>
-                                      </Form>
                                     </div>
                                   </div>
                                 </div>

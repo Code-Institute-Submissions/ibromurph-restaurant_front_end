@@ -1,84 +1,54 @@
-import {Fragment} from "react";
-import ig1 from '../../assets/img/bg-img/insta1.jpg'
-import ig2 from '../../assets/img/bg-img/insta2.jpg'
-import ig3 from '../../assets/img/bg-img/insta3.jpg'
-import ig4 from '../../assets/img/bg-img/insta4.jpg'
-import ig5 from '../../assets/img/bg-img/insta5.jpg'
-import ig6 from '../../assets/img/bg-img/insta6.jpg'
-import ig7 from '../../assets/img/bg-img/insta7.jpg'
+import React, { Component, Fragment } from "react";
+import { getInstagramPosts } from "../../actions/Instagram/InstagramAction";
+import { connect } from "react-redux";
+import PropTypes from "prop-types";
 
-const Instagram = () => {
-  return (
-    <Fragment>
-      <div className="follow-us-instagram">
-        <div className="container">
-          <div className="row">
-            <div className="col-12">
-              <h5>Follow Us Instagram</h5>
+class Instagram extends Component {
+  static propTypes = {
+    getInstagramPosts: PropTypes.func.isRequired,
+    InstagramPosts: PropTypes.any.isRequired,
+  };
+  state = {
+  };
+
+  componentDidMount() {
+    this.props.getInstagramPosts();
+  }
+
+  render() {
+    const { InstagramPosts } = this.props;
+    return (
+      <Fragment>
+        <div className="follow-us-instagram">
+          <div className="container">
+            <div className="row">
+              <div className="col-12 text-center ">
+                <h5 className="color-text-green">Follow Us Instagram</h5>
+              </div>
             </div>
+          </div>
+          <div className="insta-feeds d-flex flex-wrap">
+            {InstagramPosts.sort(() => Math.random() - Math.random())
+              .slice(0, 7)
+              .map((arr, key) => (
+                <div key={key} className="single-insta-feeds">
+                  <img src={arr.Post_Image} alt="" />
+                  <div className="insta-icon">
+                    <a href={arr.URL}>
+                      <i className="fa fa-instagram" aria-hidden="true" />
+                    </a>
+                  </div>
+                </div>
+              ))}
           </div>
         </div>
-        {/* Instagram Feeds */}
-        <div className="insta-feeds d-flex flex-wrap">
-          {/* Single Insta Feeds */}
-          <div className="single-insta-feeds">
-            <img src={ig1} alt=""/>
-            {/* Icon */}
-            <div className="insta-icon">
-              <a href="#"><i className="fa fa-instagram" aria-hidden="true"/></a>
-            </div>
-          </div>
-          {/* Single Insta Feeds */}
-          <div className="single-insta-feeds">
-            <img src={ig2} alt=""/>
-            {/* Icon */}
-            <div className="insta-icon">
-              <a href="#"><i className="fa fa-instagram" aria-hidden="true"/></a>
-            </div>
-          </div>
-          {/* Single Insta Feeds */}
-          <div className="single-insta-feeds">
-            <img src={ig3} alt=""/>
-            {/* Icon */}
-            <div className="insta-icon">
-              <a href="#"><i className="fa fa-instagram" aria-hidden="true"/></a>
-            </div>
-          </div>
-          {/* Single Insta Feeds */}
-          <div className="single-insta-feeds">
-            <img src={ig4} alt=""/>
-            {/* Icon */}
-            <div className="insta-icon">
-              <a href="#"><i className="fa fa-instagram" aria-hidden="true"/></a>
-            </div>
-          </div>
-          {/* Single Insta Feeds */}
-          <div className="single-insta-feeds">
-            <img src={ig5} alt=""/>
-            {/* Icon */}
-            <div className="insta-icon">
-              <a href="#"><i className="fa fa-instagram" aria-hidden="true"/></a>
-            </div>
-          </div>
-          {/* Single Insta Feeds */}
-          <div className="single-insta-feeds">
-            <img src={ig6} alt=""/>
-            {/* Icon */}
-            <div className="insta-icon">
-              <a href="#"><i className="fa fa-instagram" aria-hidden="true"/></a>
-            </div>
-          </div>
-          {/* Single Insta Feeds */}
-          <div className="single-insta-feeds">
-            <img src={ig7} alt=""/>
-            {/* Icon */}
-            <div className="insta-icon">
-              <a href="#"><i className="fa fa-instagram" aria-hidden="true"/></a>
-            </div>
-          </div>
-        </div>
-      </div>
-    </Fragment>
-  )
+      </Fragment>
+    );
+  }
 }
-export default Instagram
+
+const mapStateToProps = (state) => ({
+  InstagramPosts: state.InstagramPosts.InstagramPosts,
+});
+
+export default connect(mapStateToProps, { getInstagramPosts })(Instagram);

@@ -1,525 +1,178 @@
-import {Fragment} from "react";
-import Sushi from '../../assets/img/bg-img/r1.jpg'
-import HomemadeBurger from '../../assets/img/bg-img/r2.jpg'
-import VeganSmoothie from '../../assets/img/bg-img/r3.jpg'
-import r4 from '../../assets/img/bg-img/r4.jpg'
-import r5 from '../../assets/img/bg-img/r5.jpg'
-import r6 from '../../assets/img/bg-img/r6.jpg'
-import bg4 from '../../assets/img/bg-img/bg4.jpg'
-import sr1 from '../../assets/img/bg-img/sr1.jpg'
-import sr2 from '../../assets/img/bg-img/sr2.jpg'
-import sr3 from '../../assets/img/bg-img/sr3.jpg'
-import sr4 from '../../assets/img/bg-img/sr4.jpg'
-import sr5 from '../../assets/img/bg-img/sr5.jpg'
-import sr6 from '../../assets/img/bg-img/sr6.jpg'
-import sr7 from '../../assets/img/bg-img/sr7.jpg'
-import sr8 from '../../assets/img/bg-img/sr8.jpg'
-import sr9 from '../../assets/img/bg-img/sr9.jpg'
-import bg1 from '../../assets/img/bg-img/bg1.jpg'
-import bg2 from '../../assets/img/bg-img/bg2.jpg'
-import bg3 from '../../assets/img/bg-img/bg3.jpg'
-import bg6 from '../../assets/img/bg-img/bg6.jpg'
-import bg7 from '../../assets/img/bg-img/bg7.jpg'
+import { Component, Fragment } from "react";
+import Sushi from "../../assets/img/bg-img/r1.jpg";
+import HomemadeBurger from "../../assets/img/bg-img/r2.jpg";
+import VeganSmoothie from "../../assets/img/bg-img/r3.jpg";
+import r4 from "../../assets/img/bg-img/r4.jpg";
+import r5 from "../../assets/img/bg-img/r5.jpg";
+import r6 from "../../assets/img/bg-img/r6.jpg";
+import bg4 from "../../assets/img/bg-img/bg4.jpg";
+import sr1 from "../../assets/img/bg-img/sr1.jpg";
+import sr2 from "../../assets/img/bg-img/sr2.jpg";
+import sr3 from "../../assets/img/bg-img/sr3.jpg";
+import sr4 from "../../assets/img/bg-img/sr4.jpg";
+import sr5 from "../../assets/img/bg-img/sr5.jpg";
+import sr6 from "../../assets/img/bg-img/sr6.jpg";
+import sr7 from "../../assets/img/bg-img/sr7.jpg";
+import sr8 from "../../assets/img/bg-img/sr8.jpg";
+import sr9 from "../../assets/img/bg-img/sr9.jpg";
+import bg1 from "../../assets/img/bg-img/bg1.jpg";
+import bg2 from "../../assets/img/bg-img/bg2.jpg";
+import bg3 from "../../assets/img/bg-img/bg3.jpg";
+import bg6 from "../../assets/img/bg-img/bg6.jpg";
+import bg7 from "../../assets/img/bg-img/bg7.jpg";
 
-import add from '../../assets/img/bg-img/add.png'
+import add from "../../assets/img/bg-img/add.png";
 import Instagram from "../Instagram";
 import Navbar from "../Navbar";
 import Footer from "../Footer";
-import {Carousel} from "react-bootstrap";
-import bi1 from "../../assets/img/blog-img/1.jpg";
-import bi2 from "../../assets/img/blog-img/2.jpg";
-import bi3 from "../../assets/img/blog-img/3.jpg";
+import { Carousel } from "react-bootstrap";
+import { connect } from "react-redux";
+import PropTypes from "prop-types";
+import { getCarousel } from "../../actions/Carousel/CarouselAction";
+import { getTiming } from "../../actions/Timing/TimingAction";
+import TimeConvert from "../../Functions/TimeConvert";
+import { getAbout_Us } from "../../actions/AboutUS/AboutUsAction";
+import {getHomePage} from "../../actions/HomePageImage/homePageImageAction";
 
-const Home = () => {
+class Home extends Component {
+  static propTypes = {
+    getCarousel: PropTypes.func.isRequired,
+    getTiming: PropTypes.func.isRequired,
+    CarouselPosts: PropTypes.array.isRequired,
+    TimingsArray: PropTypes.array.isRequired,
+    getAbout_Us: PropTypes.func.isRequired,
+    AboutUsArray: PropTypes.array.isRequired,
+    getHomePage:PropTypes.func.isRequired,
+    HomePageImg:PropTypes.array.isRequired,
+  };
+  state = {};
 
-  return (
-    <Fragment>
-      <div>
-        <Navbar/>
+  componentDidMount() {
+    this.props.getCarousel();
+    this.props.getTiming();
+    this.props.getAbout_Us();
+    this.props.getHomePage()
+  }
+
+  render() {
+    const { CarouselPosts, TimingsArray, AboutUsArray ,HomePageImg} = this.props;
+    return (
+      <Fragment>
+        <Navbar />
         <Carousel>
-          <Carousel.Item>
-            <img
-              className="d-block w-100"
-              src={bi1}
-              alt="First slide"
-            />
-            <Carousel.Caption>
-              <h3>First slide label</h3>
-              <p>Nulla vitae elit libero, a pharetra augue mollis interdum.</p>
-            </Carousel.Caption>
-          </Carousel.Item>
-          <Carousel.Item>
-            <img
-              className="d-block w-100"
-              src={bi2}
-              alt="Second slide"
-            />
-
-            <Carousel.Caption>
-              <h3>Second slide label</h3>
-              <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit.</p>
-            </Carousel.Caption>
-          </Carousel.Item>
-          <Carousel.Item>
-            <img
-              className="d-block w-100"
-              src={bi3}
-              alt="Third slide"
-            />
-
-            <Carousel.Caption>
-              <h3>Third slide label</h3>
-              <p>
-                Praesent commodo cursus magna, vel scelerisque nisl consectetur.
-              </p>
-            </Carousel.Caption>
-          </Carousel.Item>
+          {CarouselPosts.map((arr, key) => (
+            <Carousel.Item key={key}>
+              <img
+                style={{ opacity: arr.ImageOpacity + "%" }}
+                className="d-block w-100"
+                src={arr.Image}
+                alt="First slide"
+              />
+              <Carousel.Caption>
+                <h3 style={{ color: arr.Color_Caption_Heading }}>
+                  {arr.Caption_Heading}
+                </h3>
+                <p style={{ color: arr.Color_Caption_subHeading }}>
+                  {arr.Caption_subHeading}
+                </p>
+              </Carousel.Caption>
+            </Carousel.Item>
+          ))}
         </Carousel>
-        <section className="top-catagory-area section-padding-80-0">
-          <div className="container">
-            <div className="row">
-              {/* Top Catagory Area */}
-              <div className="col-12 col-lg-6">
-                <div className="single-top-catagory">
-                  <img src={bg2} alt=""/>
-                  {/* Content */}
-                  <div className="top-cta-content">
-                    <h3>Strawberry Cake</h3>
-                    <h6>Simple &amp; Delicios</h6>
-                    <a href="/Recipe" className="btn delicious-btn">See Full Receipe</a>
-                  </div>
-                </div>
+        <section className="opening-times">
+          <div className="container ">
+            <div className="row ">
+              <div className="col-sm-6 col-md-3">
+                <h5>Monday to Friday</h5>
+                <p>
+                  from{" "}
+                  {TimeConvert(
+                    TimingsArray[0] !== undefined
+                      ? TimingsArray[0].Weekdays_Start_Time
+                      : ""
+                  )}{" "}
+                  to{" "}
+                  {TimeConvert(
+                    TimingsArray[0] !== undefined
+                      ? TimingsArray[0].Weekdays_End_Time
+                      : ""
+                  )}
+                </p>
               </div>
-              {/* Top Catagory Area */}
-              <div className="col-12 col-lg-6">
-                <div className="single-top-catagory">
-                  <img src={bg3} alt=""/>
-                  {/* Content */}
-                  <div className="top-cta-content">
-                    <h3>Chinesse Noodles</h3>
-                    <h6>Simple &amp; Delicios</h6>
-                    <a href="/Recipe" className="btn delicious-btn">See Full Receipe</a>
-                  </div>
-                </div>
+              <div className="col-sm-6 col-md-3">
+                <h5>Saturday and Sunday</h5>
+                <p>
+                  from{" "}
+                  {TimeConvert(
+                    TimingsArray[0] !== undefined
+                      ? TimingsArray[0].WeekEndTime_Start_Time
+                      : ""
+                  )}{" "}
+                  to{" "}
+                  {TimeConvert(
+                    TimingsArray[0] !== undefined
+                      ? TimingsArray[0].WeekEndTime_End_Time
+                      : ""
+                  )}
+                </p>
               </div>
             </div>
           </div>
         </section>
-        {/* ##### Top Catagory Area End ##### */}
-        {/* ##### Best Receipe Area Start ##### */}
+        <section className="widget-container standard-widget">
+          <div className="container mb-5 pb-5">
+            <h1 className="color-text-green">34 Bar &amp; Grill</h1>
+            <p style={{ textAlign: "justify" }} className="p1">
+              {AboutUsArray[0] !== undefined
+                ? AboutUsArray[0].Paragraph
+                : "Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit"}
+            </p>
+          </div>
+        </section>
         <section className="best-receipe-area">
           <div className="container">
             <div className="row">
               <div className="col-12">
                 <div className="section-heading">
-                  <h3>The best Receipies</h3>
+                  {/*<h3>The best Receipies</h3>*/}
                 </div>
               </div>
             </div>
             <div className="row">
-              {/* Single Best Receipe Area */}
-              <div className="col-12 col-sm-6 col-lg-4">
-                <div className="single-best-receipe-area mb-30">
-                  <img src={Sushi} alt=""/>
-                  <div className="receipe-content">
-                    <a href="/Recipe">
-                      <h5>Sushi Easy Receipy</h5>
-                    </a>
-                    <div className="ratings">
-                      <i className="fa fa-star" aria-hidden="true"/>
-                      <i className="fa fa-star" aria-hidden="true"/>
-                      <i className="fa fa-star" aria-hidden="true"/>
-                      <i className="fa fa-star" aria-hidden="true"/>
-                      <i className="fa fa-star-o" aria-hidden="true"/>
-                    </div>
-                  </div>
-                </div>
-              </div>
-              {/* Single Best Receipe Area */}
-              <div className="col-12 col-sm-6 col-lg-4">
-                <div className="single-best-receipe-area mb-30">
-                  <img src={HomemadeBurger} alt=""/>
-                  <div className="receipe-content">
-                    <a href="/Recipe">
-                      <h5>Homemade Burger</h5>
-                    </a>
-                    <div className="ratings">
-                      <i className="fa fa-star" aria-hidden="true"/>
-                      <i className="fa fa-star" aria-hidden="true"/>
-                      <i className="fa fa-star" aria-hidden="true"/>
-                      <i className="fa fa-star" aria-hidden="true"/>
-                      <i className="fa fa-star-o" aria-hidden="true"/>
-                    </div>
-                  </div>
-                </div>
-              </div>
-              {/* Single Best Receipe Area */}
-              <div className="col-12 col-sm-6 col-lg-4">
-                <div className="single-best-receipe-area mb-30">
-                  <img src={VeganSmoothie} alt=""/>
-                  <div className="receipe-content">
-                    <a href="/Recipe">
-                      <h5>Vegan Smoothie</h5>
-                    </a>
-                    <div className="ratings">
-                      <i className="fa fa-star" aria-hidden="true"/>
-                      <i className="fa fa-star" aria-hidden="true"/>
-                      <i className="fa fa-star" aria-hidden="true"/>
-                      <i className="fa fa-star" aria-hidden="true"/>
-                      <i className="fa fa-star-o" aria-hidden="true"/>
-                    </div>
-                  </div>
-                </div>
-              </div>
-              {/* Single Best Receipe Area */}
-              <div className="col-12 col-sm-6 col-lg-4">
-                <div className="single-best-receipe-area mb-30">
-                  <img src={r4} alt=""/>
-                  <div className="receipe-content">
-                    <a href="/Recipe">
-                      <h5>Calabasa soup</h5>
-                    </a>
-                    <div className="ratings">
-                      <i className="fa fa-star" aria-hidden="true"/>
-                      <i className="fa fa-star" aria-hidden="true"/>
-                      <i className="fa fa-star" aria-hidden="true"/>
-                      <i className="fa fa-star" aria-hidden="true"/>
-                      <i className="fa fa-star-o" aria-hidden="true"/>
-                    </div>
-                  </div>
-                </div>
-              </div>
-              {/* Single Best Receipe Area */}
-              <div className="col-12 col-sm-6 col-lg-4">
-                <div className="single-best-receipe-area mb-30">
-                  <img src={r5} alt=".."/>
-                  <div className="receipe-content">
-                    <a href="/Recipe">
-                      <h5>Homemade Breakfast</h5>
-                    </a>
-                    <div className="ratings">
-                      <i className="fa fa-star" aria-hidden="true"/>
-                      <i className="fa fa-star" aria-hidden="true"/>
-                      <i className="fa fa-star" aria-hidden="true"/>
-                      <i className="fa fa-star" aria-hidden="true"/>
-                      <i className="fa fa-star-o" aria-hidden="true"/>
-                    </div>
-                  </div>
-                </div>
-              </div>
-              {/* Single Best Receipe Area */}
-              <div className="col-12 col-sm-6 col-lg-4">
-                <div className="single-best-receipe-area mb-30">
-                  <img src={r6} alt=""/>
-                  <div className="receipe-content">
-                    <a href="/Recipe">
-                      <h5>Healthy Fruit Desert</h5>
-                    </a>
-                    <div className="ratings">
-                      <i className="fa fa-star" aria-hidden="true"/>
-                      <i className="fa fa-star" aria-hidden="true"/>
-                      <i className="fa fa-star" aria-hidden="true"/>
-                      <i className="fa fa-star" aria-hidden="true"/>
-                      <i className="fa fa-star-o" aria-hidden="true"/>
-                    </div>
-                  </div>
-                </div>
-              </div>
+
             </div>
           </div>
         </section>
-        {/* ##### Best Receipe Area End ##### */}
-        {/* ##### CTA Area Start ##### */}
-        <section className="cta-area bg-img bg-overlay" style={{backgroundImage: `url(${bg4})`}}>
+        <section className="cta-area bg-img bg-overlay" style={{ backgroundImage: `url(${HomePageImg[0]!==undefined?HomePageImg[0].Img:''})` }}>
           <div className="container h-100">
             <div className="row h-100 align-items-center">
               <div className="col-12">
                 {/* Cta Content */}
                 <div className="cta-content text-center">
-                  <h2>Gluten Free Receipies</h2>
-                  <p>Fusce nec ante vitae lacus aliquet vulputate. Donec scelerisque accumsan molestie. Vestibulum ante
-                    ipsum primis in faucibus orci luctus et ultrices posuere cubilia Curae; Cras sed accumsan neque. Ut
-                    vulputate, lectus vel aliquam congue, risus leo elementum nibh</p>
-                  <a href="#" className="btn delicious-btn">Discover all the receipies</a>
+                  <h2>{HomePageImg[0]!==undefined?HomePageImg[0].Heading1:''}</h2>
+                  <p>{HomePageImg[0]!==undefined?HomePageImg[0].Paragraph:''}</p>
                 </div>
               </div>
             </div>
           </div>
         </section>
-        {/* ##### CTA Area End ##### */}
-        {/* ##### Small Receipe Area Start ##### */}
-        <section className="small-receipe-area section-padding-80-0">
-          <div className="container">
-            <div className="row">
-              {/* Small Receipe Area */}
-              <div className="col-12 col-sm-6 col-lg-4">
-                <div className="single-small-receipe-area d-flex">
-                  {/* Receipe Thumb */}
-                  <div className="receipe-thumb">
-                    <img src={sr1} alt=""/>
-                  </div>
-                  {/* Receipe Content */}
-                  <div className="receipe-content">
-                    <span>January 04, 2018</span>
-                    <a href="/Recipe">
-                      <h5>Homemade italian pasta</h5>
-                    </a>
-                    <div className="ratings">
-                      <i className="fa fa-star" aria-hidden="true"/>
-                      <i className="fa fa-star" aria-hidden="true"/>
-                      <i className="fa fa-star" aria-hidden="true"/>
-                      <i className="fa fa-star" aria-hidden="true"/>
-                      <i className="fa fa-star-o" aria-hidden="true"/>
-                    </div>
-                    <p>2 Comments</p>
-                  </div>
-                </div>
-              </div>
-              {/* Small Receipe Area */}
-              <div className="col-12 col-sm-6 col-lg-4">
-                <div className="single-small-receipe-area d-flex">
-                  {/* Receipe Thumb */}
-                  <div className="receipe-thumb">
-                    <img src={sr2} alt=""/>
-                  </div>
-                  {/* Receipe Content */}
-                  <div className="receipe-content">
-                    <span>January 04, 2018</span>
-                    <a href="/Recipe">
-                      <h5>Baked Bread</h5>
-                    </a>
-                    <div className="ratings">
-                      <i className="fa fa-star" aria-hidden="true"/>
-                      <i className="fa fa-star" aria-hidden="true"/>
-                      <i className="fa fa-star" aria-hidden="true"/>
-                      <i className="fa fa-star" aria-hidden="true"/>
-                      <i className="fa fa-star-o" aria-hidden="true"/>
-                    </div>
-                    <p>2 Comments</p>
-                  </div>
-                </div>
-              </div>
-              {/* Small Receipe Area */}
-              <div className="col-12 col-sm-6 col-lg-4">
-                <div className="single-small-receipe-area d-flex">
-                  {/* Receipe Thumb */}
-                  <div className="receipe-thumb">
-                    <img src={sr3} alt=""/>
-                  </div>
-                  {/* Receipe Content */}
-                  <div className="receipe-content">
-                    <span>January 04, 2018</span>
-                    <a href="/Recipe">
-                      <h5>Scalops on salt</h5>
-                    </a>
-                    <div className="ratings">
-                      <i className="fa fa-star" aria-hidden="true"/>
-                      <i className="fa fa-star" aria-hidden="true"/>
-                      <i className="fa fa-star" aria-hidden="true"/>
-                      <i className="fa fa-star" aria-hidden="true"/>
-                      <i className="fa fa-star-o" aria-hidden="true"/>
-                    </div>
-                    <p>2 Comments</p>
-                  </div>
-                </div>
-              </div>
-              {/* Small Receipe Area */}
-              <div className="col-12 col-sm-6 col-lg-4">
-                <div className="single-small-receipe-area d-flex">
-                  {/* Receipe Thumb */}
-                  <div className="receipe-thumb">
-                    <img src={sr4} alt=""/>
-                  </div>
-                  {/* Receipe Content */}
-                  <div className="receipe-content">
-                    <span>January 04, 2018</span>
-                    <a href="/Recipe">
-                      <h5>Fruits on plate</h5>
-                    </a>
-                    <div className="ratings">
-                      <i className="fa fa-star" aria-hidden="true"/>
-                      <i className="fa fa-star" aria-hidden="true"/>
-                      <i className="fa fa-star" aria-hidden="true"/>
-                      <i className="fa fa-star" aria-hidden="true"/>
-                      <i className="fa fa-star-o" aria-hidden="true"/>
-                    </div>
-                    <p>2 Comments</p>
-                  </div>
-                </div>
-              </div>
-              {/* Small Receipe Area */}
-              <div className="col-12 col-sm-6 col-lg-4">
-                <div className="single-small-receipe-area d-flex">
-                  {/* Receipe Thumb */}
-                  <div className="receipe-thumb">
-                    <img src={sr5} alt=""/>
-                  </div>
-                  {/* Receipe Content */}
-                  <div className="receipe-content">
-                    <span>January 04, 2018</span>
-                    <a href="/Recipe">
-                      <h5>Macaroons</h5>
-                    </a>
-                    <div className="ratings">
-                      <i className="fa fa-star" aria-hidden="true"/>
-                      <i className="fa fa-star" aria-hidden="true"/>
-                      <i className="fa fa-star" aria-hidden="true"/>
-                      <i className="fa fa-star" aria-hidden="true"/>
-                      <i className="fa fa-star-o" aria-hidden="true"/>
-                    </div>
-                    <p>2 Comments</p>
-                  </div>
-                </div>
-              </div>
-              {/* Small Receipe Area */}
-              <div className="col-12 col-sm-6 col-lg-4">
-                <div className="single-small-receipe-area d-flex">
-                  {/* Receipe Thumb */}
-                  <div className="receipe-thumb">
-                    <img src={sr6} alt=""/>
-                  </div>
-                  {/* Receipe Content */}
-                  <div className="receipe-content">
-                    <span>January 04, 2018</span>
-                    <a href="/Recipe">
-                      <h5>Chocolate tart</h5>
-                    </a>
-                    <div className="ratings">
-                      <i className="fa fa-star" aria-hidden="true"/>
-                      <i className="fa fa-star" aria-hidden="true"/>
-                      <i className="fa fa-star" aria-hidden="true"/>
-                      <i className="fa fa-star" aria-hidden="true"/>
-                      <i className="fa fa-star-o" aria-hidden="true"/>
-                    </div>
-                    <p>2 Comments</p>
-                  </div>
-                </div>
-              </div>
-              {/* Small Receipe Area */}
-              <div className="col-12 col-sm-6 col-lg-4">
-                <div className="single-small-receipe-area d-flex">
-                  {/* Receipe Thumb */}
-                  <div className="receipe-thumb">
-                    <img src={sr7} alt=""/>
-                  </div>
-                  {/* Receipe Content */}
-                  <div className="receipe-content">
-                    <span>January 04, 2018</span>
-                    <a href="/Recipe">
-                      <h5>Berry Desert</h5>
-                    </a>
-                    <div className="ratings">
-                      <i className="fa fa-star" aria-hidden="true"/>
-                      <i className="fa fa-star" aria-hidden="true"/>
-                      <i className="fa fa-star" aria-hidden="true"/>
-                      <i className="fa fa-star" aria-hidden="true"/>
-                      <i className="fa fa-star-o" aria-hidden="true"/>
-                    </div>
-                    <p>2 Comments</p>
-                  </div>
-                </div>
-              </div>
-              {/* Small Receipe Area */}
-              <div className="col-12 col-sm-6 col-lg-4">
-                <div className="single-small-receipe-area d-flex">
-                  {/* Receipe Thumb */}
-                  <div className="receipe-thumb">
-                    <img src={sr8} alt=""/>
-                  </div>
-                  {/* Receipe Content */}
-                  <div className="receipe-content">
-                    <span>January 04, 2018</span>
-                    <a href="/Recipe">
-                      <h5>Zucchini Grilled on peper</h5>
-                    </a>
-                    <div className="ratings">
-                      <i className="fa fa-star" aria-hidden="true"/>
-                      <i className="fa fa-star" aria-hidden="true"/>
-                      <i className="fa fa-star" aria-hidden="true"/>
-                      <i className="fa fa-star" aria-hidden="true"/>
-                      <i className="fa fa-star-o" aria-hidden="true"/>
-                    </div>
-                    <p>2 Comments</p>
-                  </div>
-                </div>
-              </div>
-              {/* Small Receipe Area */}
-              <div className="col-12 col-sm-6 col-lg-4">
-                <div className="single-small-receipe-area d-flex">
-                  {/* Receipe Thumb */}
-                  <div className="receipe-thumb">
-                    <img src={sr9} alt=""/>
-                  </div>
-                  {/* Receipe Content */}
-                  <div className="receipe-content">
-                    <span>January 04, 2018</span>
-                    <a href="/Recipe">
-                      <h5>Chicken Salad</h5>
-                    </a>
-                    <div className="ratings">
-                      <i className="fa fa-star" aria-hidden="true"/>
-                      <i className="fa fa-star" aria-hidden="true"/>
-                      <i className="fa fa-star" aria-hidden="true"/>
-                      <i className="fa fa-star" aria-hidden="true"/>
-                      <i className="fa fa-star-o" aria-hidden="true"/>
-                    </div>
-                    <p>2 Comments</p>
-                  </div>
-                </div>
-              </div>
-            </div>
-          </div>
-        </section>
-        {/* ##### Small Receipe Area End ##### */}
-        {/* ##### Quote Subscribe Area Start ##### */}
-        <section className="quote-subscribe-adds">
-          <div className="container">
-            <div className="row align-items-end">
-              {/* Quote */}
-              <div className="col-12 col-lg-4">
-                <div className="quote-area text-center">
-                  <span>"</span>
-                  <h4>Nothing is better than going home to family and eating good food and relaxing</h4>
-                  <p>John Smith</p>
-                  <div className="date-comments d-flex justify-content-between">
-                    <div className="date">January 04, 2018</div>
-                    <div className="comments">2 Comments</div>
-                  </div>
-                </div>
-              </div>
-              {/* Newsletter */}
-              <div className="col-12 col-lg-4">
-                <div className="newsletter-area">
-                  <h4>Subscribe to our newsletter</h4>
-                  {/* Form */}
-                  <div className="newsletter-form bg-img bg-overlay"
-                       style={{backgroundImage: `url(${bg1})`}}>
-                    <form action="#" method="post">
-                      <input type="email" name="email" placeholder="Subscribe to newsletter"/>
-                      <button type="submit" className="btn delicious-btn w-100">Subscribe</button>
-                    </form>
-                    <p>Fusce nec ante vitae lacus aliquet vulputate. Donec sceleri sque accumsan molestie. Vestibulum
-                      ante ipsum primis in faucibus orci luctus et ultrices posuere cubilia.</p>
-                  </div>
-                </div>
-              </div>
-              {/* Adds */}
-              <div className="col-12 col-lg-4">
-                <div className="delicious-add">
-                  <img src={add} alt=""/>
-                </div>
-              </div>
-            </div>
-          </div>
-        </section>
-        {/* ##### Quote Subscribe Area End ##### */}
-        {/* ##### Follow Us Instagram Area Start ##### */}
-        <Instagram/>
-        {/* ##### Follow Us Instagram Area End ##### */}
-        <Footer/>
-      </div>
-    </Fragment>
-  )
+        <Instagram />
+        <Footer />
+      </Fragment>
+    );
+  }
 }
-export default Home
 
+const mapStateToProps = (state) => ({
+  CarouselPosts: state.CarouselPosts.CarouselPosts,
+  TimingsArray: state.TimingsArray.TimingsArray,
+  AboutUsArray: state.AboutUsArray.AboutUsArray,
+  HomePageImg:state.HomePageImg.HomePageImg
+});
+
+export default connect(mapStateToProps, {
+  getCarousel,
+  getTiming,
+  getAbout_Us,
+  getHomePage,
+})(Home);

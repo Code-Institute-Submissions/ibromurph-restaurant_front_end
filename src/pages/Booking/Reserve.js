@@ -1,40 +1,64 @@
-import { Fragment, useState } from "react";
-import Navbar from "./Navbar";
-import bc2 from "../assets/img/bg-img/breadcumb2.jpg";
-import Instagram from "./Instagram";
-import Footer from "./Footer";
-import bi1 from "../assets/img/blog-img/1.jpg";
-import {Col, Form, Row} from "react-bootstrap";
+import { Fragment, useEffect, useState } from "react";
+import Navbar from "../Navbar";
+import Instagram from "../Instagram";
+import Footer from "../Footer";
+import { Col, Form, Row } from "react-bootstrap";
 import { Formik } from "formik";
 import * as yup from "yup";
-import { Time_Hours } from "./DataFiles/Time";
-import { Slots } from "./DataFiles/Slots";
-import { Temp_Time } from "./DataFiles/Temp_Time";
+import { Time_Hours } from "../DataFiles/Time";
+import { Slots } from "../DataFiles/Slots";
+import { Temp_Time } from "../DataFiles/Temp_Time";
+import { useDispatch, useSelector } from "react-redux";
+import { getBookingCover } from "../../actions/Booking/bookingCoverAction";
+import { getBookingCover2 } from "../../actions/Booking/bookingCover2Action";
+import DateGetter from "../../Functions/DayGetter";
 
 const schemaBookTable = yup.object({
   Time: yup.string().required("Please Pick Time"),
-  PartySize: yup.string().required("choose party time"),
-  Date_event: yup.string().required("Select Date"),
+  PartySize: yup.string().required("Choose party time"),
+  Date_event:yup.date().min(new Date(),'Booking Date Cannot be in the past')
+    .max(new Date(Date.now()+7884000000),"Booking within 3 months Date")
+    .required('Booking date is required')
 });
-const schemaBookTableDetails=yup.object({
+const schemaBookTableDetails = yup.object({
   // FirstName: "",
   // LastName: "",
   // Email: "",
   // Number: "",
   // TypeofBooking:'',
   // GetEmails:''
-})
+});
 const Reserve = () => {
+  const dispatch = useDispatch();
+  useEffect(() => {
+    dispatch(getBookingCover());
+  }, []);
+  useEffect(() => {
+    dispatch(getBookingCover2());
+  }, []);
+
+  const BookingCover = useSelector((state) => state.BookingCover.BookingCover);
+  const BookingCover2 = useSelector(
+    (state) => state.BookingCover2.BookingCover2
+  );
+
   const [show, setShow] = useState(true);
   const [showTwo, setShowTwo] = useState(false);
   const [showThree, setShowThree] = useState(false);
 
-  const TableOne = () => {
+  const [Time, setTime] = useState('');
+  const [PartySize, setPartySize] = useState('');
+  const [DateEvent, setDateEvent] = useState('');
+
+
+  const TableOne = (values) => {
     setShow(false);
     setShowTwo(true);
     setShowThree(false);
+    setTime(values.Time)
+    setPartySize(values.PartySize)
+    setDateEvent(values.Date_event)
   };
-
   const TableThree = () => {
     setShow(false);
     setShowTwo(false);
@@ -48,20 +72,25 @@ const Reserve = () => {
   return (
     <Fragment>
       <Navbar />
-      <div
-        className="breadcumb-area bg-img bg-overlay"
-        style={{ backgroundImage: `url(${bc2})` }}
-      >
-        <div className="container h-100">
-          <div className="row h-100 align-items-center">
-            <div className="col-12">
-              <div className="breadcumb-text text-center">
-                <h2>Book a table</h2>
+      {BookingCover.length !== 0 ? (
+        <div
+          className="breadcumb-area bg-img bg-overlay"
+          style={{ backgroundImage: `url(${BookingCover[0].cover_Img})` }}
+        >
+          <div className="container h-100">
+            <div className="row h-100 align-items-center">
+              <div className="col-12">
+                <div className="breadcumb-text text-center">
+                  <h2>{BookingCover[0].Caption}</h2>
+                </div>
               </div>
             </div>
           </div>
         </div>
-      </div>
+      ) : (
+        ""
+      )}
+
       <div className="blog-area section-padding-80">
         <div className="container">
           <div className="row">
@@ -70,7 +99,11 @@ const Reserve = () => {
                 {/* Single Blog Area */}
                 <div className="single-blog-area mb-80">
                   <div className="banner">
-                    <img src={bi1} alt="" />
+                    {BookingCover2.length !== 0 ? (
+                      <img src={BookingCover2[0].cover_Img} alt="" />
+                    ) : (
+                      ""
+                    )}
                   </div>
                   <main className="engine" id="table-one">
                     <div style={{ display: show === true ? "" : "None" }}>
@@ -79,16 +112,16 @@ const Reserve = () => {
                         <div className="richtext engine__intro">
                           <p>We look forward to welcoming you back.</p>
                           <p>
-                            Please note that we require card details to secure
-                            your booking. In the event that the reservation is
-                            not cancelled with 24 hours' notice, it will result
-                            in a charge of <b>£25</b> per guest.
+                            {BookingCover2.length !== 0
+                              ? BookingCover2[0].Text
+                              : ""}
                           </p>
                         </div>
                       </header>
+
                       <div className="opentable opentable--search">
                         <Formik
-                          // validationSchema={schemaBookTable}
+                          validationSchema={schemaBookTable}
                           onSubmit={(values) => TableOne(values)}
                           initialValues={{
                             Time: "",
@@ -142,6 +175,9 @@ const Reserve = () => {
                                       });
                                     }}
                                   >
+                                    <option selected disabled >
+                                      Please Select
+                                    </option>
                                     {Time_Hours.map((arr, key) => (
                                       <option key={key} value={arr.value}>
                                         {arr.label}
@@ -153,7 +189,6 @@ const Reserve = () => {
                                   </Form.Control.Feedback>
                                 </div>
                               </div>
-                              {/*Party Size*/}
 
                               <div
                                 id="reservation_partysize_wrap"
@@ -181,6 +216,9 @@ const Reserve = () => {
                                       });
                                     }}
                                   >
+                                    <option selected disabled >
+                                      Please Select
+                                    </option>
                                     {Slots.map((arr, key) => (
                                       <option key={key} value={arr.value}>
                                         {arr.label}
@@ -192,7 +230,6 @@ const Reserve = () => {
                                   </Form.Control.Feedback>
                                 </div>
                               </div>
-                              {/*Date*/}
 
                               <div
                                 id="reservation_partysize_wrap"
@@ -257,10 +294,10 @@ const Reserve = () => {
                         <div className="richtext engine__intro">
                           <p>
                             Booking for{" "}
-                            <span className="color-text-green">5</span> people
+                            <span className="color-text-green">{PartySize}</span> people
                             on{" "}
                             <span className="color-text-green">
-                              Saturday 6th August
+                              {DateGetter(DateEvent)}
                             </span>
                             .
                           </p>
@@ -320,8 +357,8 @@ const Reserve = () => {
                             LastName: "",
                             Email: "",
                             Number: "",
-                            TypeofBooking:'',
-                            GetEmails:''
+                            TypeofBooking: "",
+                            GetEmails: "",
                           }}
                         >
                           {({
@@ -331,10 +368,7 @@ const Reserve = () => {
                             touched,
                             errors,
                           }) => (
-                            <Form
-                              noValidate
-                              onSubmit={handleSubmit}
-                            >
+                            <Form noValidate onSubmit={handleSubmit}>
                               <div
                                 id="reservation_sitting_wrap"
                                 className="field field--select-callback required field-select"
@@ -342,180 +376,176 @@ const Reserve = () => {
                                 <div className="row">
                                   <div className="col-12">
                                     <div className="contact-form-area">
-                                        <div className="row">
-                                          <div className="col-12 col-lg-6">
-                                            <Form.Label className="field__label">
-                                              FIRST NAME
-                                              <span className="color-text-green">
-                                                {" "}
-                                                *
-                                              </span>
-                                            </Form.Label>
-                                            <Form.Control
-                                              type="text"
-                                              className="form-control"
-                                              id="name"
-                                              name="FirstName"
-                                              onChange={handleChange}
-                                              isInvalid={!!errors.FirstName}
-                                            />
-                                            <Form.Control.Feedback type="invalid">
-                                              {errors.FirstName}
-                                            </Form.Control.Feedback>
-                                          </div>
-                                          <div className="col-12 col-lg-6">
-                                            <Form.Label className="field__label">
-                                              LAST NAME
-                                              <span className="color-text-green">
-                                                {" "}
-                                                *
-                                              </span>
-                                            </Form.Label>
-                                            <Form.Control
-                                              type="text"
-                                              className="form-control"
-                                              name="LastName"
-                                              onChange={handleChange}
-                                              isInvalid={!!errors.LastName}
-                                            />
-                                            <Form.Control.Feedback type="invalid">
-                                              {errors.LastName}
-                                            </Form.Control.Feedback>
-                                          </div>
-                                          <div className="col-12 col-lg-6">
-                                            <Form.Label className="field__label">
-                                              EMAIL
-                                              <span className="color-text-green">
-                                                {" "}
-                                                *
-                                              </span>
-                                            </Form.Label>
-                                            <Form.Control
-                                              type="email"
-                                              className="form-control"
-                                              id="name"
-                                              name="Email"
-                                              onChange={handleChange}
-                                              isInvalid={!!errors.Email}
-                                            />
-                                            <Form.Control.Feedback type="invalid">
-                                              {errors.Email}
-                                            </Form.Control.Feedback>
-                                          </div>
-                                          <div className="col-12 col-lg-6">
-                                            <Form.Label className="field__label">
-                                              TELEPHONE NUMBER
-                                              <span className="color-text-green">
-                                                {" "}
-                                                *
-                                              </span>
-                                            </Form.Label>
-                                            <Form.Control
-                                              type="text"
-                                              className="form-control"
-                                              name="Number"
-                                              onChange={handleChange}
-                                              isInvalid={!!errors.Number}
-                                            />
-                                            <Form.Control.Feedback type="invalid">
-                                              {errors.Number}
-                                            </Form.Control.Feedback>
-                                          </div>
-
-                                          <div className="col-12 col-lg-12">
-                                            <Form.Label
-                                              style={{ textTransform: "unset" }}
-                                            >
-                                              Are you booking on behalf of
-                                              somebody else?
-                                              <span className="color-text-green">
-                                                {" "}
-                                                *
-                                              </span>
-                                            </Form.Label>
-                                            <Form.Group as={Row}>
-                                              <Col sm={12}>
-                                                <Form.Check
-                                                  name="TypeofBooking"
-                                                  onChange={handleChange}
-                                                  type="switch"
-                                                  id="custom-switch"
-                                                  label="Check this switch"
-                                                />
-
-                                              </Col>
-                                            </Form.Group>
-                                          </div>
-                                          <div className="col-12 col-lg-12 mt-2">
-                                            <div className="form-check">
-
-                                              <input
-                                                className="form-check-input"
-                                                type="checkbox"
-                                                value=""
-                                                id="flexCheckDefault"
-                                                name="GetEmails"
-                                                onChange={handleChange}
-
-                                              />
-                                              <label
-                                                className="form-check-label"
-                                                htmlFor="flexCheckDefault"
-                                              >
-                                                Yes, I'm happy to receive
-                                                occasional emails
-                                              </label>
-                                            </div>
-
-                                            <Form.Text
-                                              id="passwordHelpBlock"
-                                              muted
-                                            >
-                                              We'd like to keep in touch with
-                                              you about our restaurants. We
-                                              refers to Caprice Holdings Ltd and
-                                              our sister brands are Troia (UK)
-                                              Restaurants Ltd trading as: The
-                                              Ivy Collection, The Ivy Asia,
-                                              Harry’s Dolce Vita, Harry’s Bar
-                                              James Street, Brasserie of Light
-                                              and Birley Club Group. We will
-                                              contact you about opportunities to
-                                              join us for special events as well
-                                              as information about new seasonal
-                                              menu changes you can enjoy. We
-                                              will keep your data secure, and of
-                                              course would never sell or share
-                                              data you share with us. You can
-                                              change your mind at any time by
-                                              clicking unsubscribe on any email
-                                              you receive or by clicking the
-                                              link on our website.
-                                            </Form.Text>
-                                          </div>
-                                          <div className="col-12 text-center">
-                                            <button
-                                              className="btn delicious-btn mt-30"
-                                              type="submit"
-                                            >
-                                              BOOK NOW
-                                            </button>
-
-                                            <div className="underline_line" />
-
-                                            <button
-                                              className="btn"
-                                              style={{
-                                                background: "transparent",
-                                              }}
-                                              onClick={() => ReverseTableOne()}
-                                            >
-                                              <span className="color-text-green text-capitalize">
-                                                SEARCH AGAIN
-                                              </span>
-                                            </button>
-                                          </div>
+                                      <div className="row">
+                                        <div className="col-12 col-lg-6">
+                                          <Form.Label className="field__label">
+                                            FIRST NAME
+                                            <span className="color-text-green">
+                                              {" "}
+                                              *
+                                            </span>
+                                          </Form.Label>
+                                          <Form.Control
+                                            type="text"
+                                            className="form-control"
+                                            id="name"
+                                            name="FirstName"
+                                            onChange={handleChange}
+                                            isInvalid={!!errors.FirstName}
+                                          />
+                                          <Form.Control.Feedback type="invalid">
+                                            {errors.FirstName}
+                                          </Form.Control.Feedback>
                                         </div>
+                                        <div className="col-12 col-lg-6">
+                                          <Form.Label className="field__label">
+                                            LAST NAME
+                                            <span className="color-text-green">
+                                              {" "}
+                                              *
+                                            </span>
+                                          </Form.Label>
+                                          <Form.Control
+                                            type="text"
+                                            className="form-control"
+                                            name="LastName"
+                                            onChange={handleChange}
+                                            isInvalid={!!errors.LastName}
+                                          />
+                                          <Form.Control.Feedback type="invalid">
+                                            {errors.LastName}
+                                          </Form.Control.Feedback>
+                                        </div>
+                                        <div className="col-12 col-lg-6">
+                                          <Form.Label className="field__label">
+                                            EMAIL
+                                            <span className="color-text-green">
+                                              {" "}
+                                              *
+                                            </span>
+                                          </Form.Label>
+                                          <Form.Control
+                                            type="email"
+                                            className="form-control"
+                                            id="name"
+                                            name="Email"
+                                            onChange={handleChange}
+                                            isInvalid={!!errors.Email}
+                                          />
+                                          <Form.Control.Feedback type="invalid">
+                                            {errors.Email}
+                                          </Form.Control.Feedback>
+                                        </div>
+                                        <div className="col-12 col-lg-6">
+                                          <Form.Label className="field__label">
+                                            TELEPHONE NUMBER
+                                            <span className="color-text-green">
+                                              {" "}
+                                              *
+                                            </span>
+                                          </Form.Label>
+                                          <Form.Control
+                                            type="text"
+                                            className="form-control"
+                                            name="Number"
+                                            onChange={handleChange}
+                                            isInvalid={!!errors.Number}
+                                          />
+                                          <Form.Control.Feedback type="invalid">
+                                            {errors.Number}
+                                          </Form.Control.Feedback>
+                                        </div>
+
+                                        <div className="col-12 col-lg-12">
+                                          <Form.Label
+                                            style={{ textTransform: "unset" }}
+                                          >
+                                            Are you booking on behalf of
+                                            somebody else?
+                                            <span className="color-text-green">
+                                              {" "}
+                                              *
+                                            </span>
+                                          </Form.Label>
+                                          <Form.Group as={Row}>
+                                            <Col sm={12}>
+                                              <Form.Check
+                                                name="TypeofBooking"
+                                                onChange={handleChange}
+                                                type="switch"
+                                                id="custom-switch"
+                                                label="Check this switch"
+                                              />
+                                            </Col>
+                                          </Form.Group>
+                                        </div>
+                                        <div className="col-12 col-lg-12 mt-2">
+                                          <div className="form-check">
+                                            <input
+                                              className="form-check-input"
+                                              type="checkbox"
+                                              value=""
+                                              id="flexCheckDefault"
+                                              name="GetEmails"
+                                              onChange={handleChange}
+                                            />
+                                            <label
+                                              className="form-check-label"
+                                              htmlFor="flexCheckDefault"
+                                            >
+                                              Yes, I'm happy to receive
+                                              occasional emails
+                                            </label>
+                                          </div>
+
+                                          <Form.Text
+                                            id="passwordHelpBlock"
+                                            muted
+                                          >
+                                            We'd like to keep in touch with you
+                                            about our restaurants. We refers to
+                                            Caprice Holdings Ltd and our sister
+                                            brands are Troia (UK) Restaurants
+                                            Ltd trading as: The Ivy Collection,
+                                            The Ivy Asia, Harry’s Dolce Vita,
+                                            Harry’s Bar James Street, Brasserie
+                                            of Light and Birley Club Group. We
+                                            will contact you about opportunities
+                                            to join us for special events as
+                                            well as information about new
+                                            seasonal menu changes you can enjoy.
+                                            We will keep your data secure, and
+                                            of course would never sell or share
+                                            data you share with us. You can
+                                            change your mind at any time by
+                                            clicking unsubscribe on any email
+                                            you receive or by clicking the link
+                                            on our website.
+                                          </Form.Text>
+                                        </div>
+                                        <div className="col-12 text-center">
+                                          <button
+                                            className="btn delicious-btn mt-30"
+                                            type="submit"
+                                          >
+                                            BOOK NOW
+                                          </button>
+
+                                          <div className="underline_line" />
+
+                                          <button
+                                            className="btn"
+                                            style={{
+                                              background: "transparent",
+                                            }}
+                                            onClick={() => ReverseTableOne()}
+                                          >
+                                            <span className="color-text-green text-capitalize">
+                                              SEARCH AGAIN
+                                            </span>
+                                          </button>
+                                        </div>
+                                      </div>
                                     </div>
                                   </div>
                                 </div>

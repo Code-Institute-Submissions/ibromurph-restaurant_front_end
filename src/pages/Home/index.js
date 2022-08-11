@@ -1,27 +1,4 @@
 import { Component, Fragment } from "react";
-import Sushi from "../../assets/img/bg-img/r1.jpg";
-import HomemadeBurger from "../../assets/img/bg-img/r2.jpg";
-import VeganSmoothie from "../../assets/img/bg-img/r3.jpg";
-import r4 from "../../assets/img/bg-img/r4.jpg";
-import r5 from "../../assets/img/bg-img/r5.jpg";
-import r6 from "../../assets/img/bg-img/r6.jpg";
-import bg4 from "../../assets/img/bg-img/bg4.jpg";
-import sr1 from "../../assets/img/bg-img/sr1.jpg";
-import sr2 from "../../assets/img/bg-img/sr2.jpg";
-import sr3 from "../../assets/img/bg-img/sr3.jpg";
-import sr4 from "../../assets/img/bg-img/sr4.jpg";
-import sr5 from "../../assets/img/bg-img/sr5.jpg";
-import sr6 from "../../assets/img/bg-img/sr6.jpg";
-import sr7 from "../../assets/img/bg-img/sr7.jpg";
-import sr8 from "../../assets/img/bg-img/sr8.jpg";
-import sr9 from "../../assets/img/bg-img/sr9.jpg";
-import bg1 from "../../assets/img/bg-img/bg1.jpg";
-import bg2 from "../../assets/img/bg-img/bg2.jpg";
-import bg3 from "../../assets/img/bg-img/bg3.jpg";
-import bg6 from "../../assets/img/bg-img/bg6.jpg";
-import bg7 from "../../assets/img/bg-img/bg7.jpg";
-
-import add from "../../assets/img/bg-img/add.png";
 import Instagram from "../Instagram";
 import Navbar from "../Navbar";
 import Footer from "../Footer";

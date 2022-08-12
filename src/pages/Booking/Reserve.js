@@ -12,6 +12,8 @@ import { useDispatch, useSelector } from "react-redux";
 import { getBookingCover } from "../../actions/Booking/bookingCoverAction";
 import { getBookingCover2 } from "../../actions/Booking/bookingCover2Action";
 import DateGetter from "../../Functions/DayGetter";
+import TimeGetter from "../../Functions/TimeGetter";
+
 
 const schemaBookTable = yup.object({
   Time: yup.string().required("Please Pick Time"),
@@ -21,26 +23,20 @@ const schemaBookTable = yup.object({
     .required('Booking date is required')
 });
 const schemaBookTableDetails = yup.object({
-  // FirstName: "",
-  // LastName: "",
-  // Email: "",
-  // Number: "",
-  // TypeofBooking:'',
-  // GetEmails:''
+  FirstName: yup.string().required("What's you First name?"),
+  LastName: yup.string().required("What's you Last name?"),
+  Email: yup.string().email().required("You might need your email later!"),
+  Number: yup.string().required("We may need to Contact you for confirmation"),
 });
 const Reserve = () => {
   const dispatch = useDispatch();
   useEffect(() => {
     dispatch(getBookingCover());
   }, []);
-  useEffect(() => {
-    dispatch(getBookingCover2());
-  }, []);
+  useEffect(() => {dispatch(getBookingCover2());}, []);
 
   const BookingCover = useSelector((state) => state.BookingCover.BookingCover);
-  const BookingCover2 = useSelector(
-    (state) => state.BookingCover2.BookingCover2
-  );
+  const BookingCover2 = useSelector((state) => state.BookingCover2.BookingCover2);
 
   const [show, setShow] = useState(true);
   const [showTwo, setShowTwo] = useState(false);
@@ -49,6 +45,14 @@ const Reserve = () => {
   const [Time, setTime] = useState('');
   const [PartySize, setPartySize] = useState('');
   const [DateEvent, setDateEvent] = useState('');
+  const [DateEventButton, setDateEventButton] = useState('');
+
+  const [FirstName, setFirstName] = useState('');
+  const [LastName, setLastName] = useState('');
+  const [Email, setEmail] = useState('');
+  const [PhoneNumber, setPhoneNumber] = useState('');
+  const [Get_Emails, setGet_Emails] = useState('');
+  const [Type_of_Booking, setType_of_Booking] = useState('');
 
 
   const TableOne = (values) => {
@@ -59,16 +63,20 @@ const Reserve = () => {
     setPartySize(values.PartySize)
     setDateEvent(values.Date_event)
   };
-  const TableThree = () => {
+  const TableThree = (value) => {
     setShow(false);
     setShowTwo(false);
     setShowThree(true);
+    setDateEventButton(value)
   };
   const ReverseTableOne = () => {
     setShow(true);
     setShowTwo(false);
     setShowThree(false);
   };
+  const TableDetails=(values)=>{
+    console.log(values)
+  }
   return (
     <Fragment>
       <Navbar />
@@ -96,7 +104,6 @@ const Reserve = () => {
           <div className="row">
             <div className="col-12 col-lg-12">
               <div className="blog-posts-area">
-                {/* Single Blog Area */}
                 <div className="single-blog-area mb-80">
                   <div className="banner">
                     {BookingCover2.length !== 0 ? (
@@ -118,7 +125,6 @@ const Reserve = () => {
                           </p>
                         </div>
                       </header>
-
                       <div className="opentable opentable--search">
                         <Formik
                           validationSchema={schemaBookTable}
@@ -175,7 +181,7 @@ const Reserve = () => {
                                       });
                                     }}
                                   >
-                                    <option selected disabled >
+                                    <option selected disabled>
                                       Please Select
                                     </option>
                                     {Time_Hours.map((arr, key) => (
@@ -216,7 +222,7 @@ const Reserve = () => {
                                       });
                                     }}
                                   >
-                                    <option selected disabled >
+                                    <option selected disabled>
                                       Please Select
                                     </option>
                                     {Slots.map((arr, key) => (
@@ -294,8 +300,10 @@ const Reserve = () => {
                         <div className="richtext engine__intro">
                           <p>
                             Booking for{" "}
-                            <span className="color-text-green">{PartySize}</span> people
-                            on{" "}
+                            <span className="color-text-green">
+                              {PartySize}
+                            </span>{" "}
+                            people on{" "}
                             <span className="color-text-green">
                               {DateGetter(DateEvent)}
                             </span>
@@ -305,13 +313,13 @@ const Reserve = () => {
                       </header>
                       <div className="opentable opentable--search">
                         <div className="row ">
-                          {Temp_Time.map((arr, key) => (
+                          {TimeGetter(DateEvent, Time).map((arr, key) => (
                             <div key={key} className="col-3 mt-3 ">
                               <button
-                                onClick={() => TableThree()}
+                                onClick={() => TableThree(arr)}
                                 className="btn btn-green opentable-slots__time"
                               >
-                                <span>{arr.value}</span>
+                                <span>{arr}</span>
                               </button>
                             </div>
                           ))}
@@ -330,20 +338,15 @@ const Reserve = () => {
                         </span>
                       </button>
                     </div>
-
                     <div style={{ display: showThree === true ? "" : "None" }}>
                       <header className="engine__header">
                         <h1 className="title color-text-green">YOUR DETAILS</h1>
                         <div className="richtext engine__intro">
                           <p>
                             Booking for{" "}
-                            <span className="color-text-green">5</span> people
-                            at <span className="color-text-green">6:15pm</span>{" "}
-                            on{" "}
-                            <span className="color-text-green">
-                              Saturday 1st October
-                            </span>
-                            .
+                            <span className="color-text-green">{PartySize}</span> people
+                            at <span className="color-text-green">{Time}</span>{" "}
+                            {DateGetter(DateEvent)}.
                           </p>
                         </div>
                       </header>
@@ -351,7 +354,7 @@ const Reserve = () => {
                       <div className="opentable opentable--details">
                         <Formik
                           validationSchema={schemaBookTableDetails}
-                          onSubmit={(values) => console.log(values)}
+                          onSubmit={(values) => TableDetails(values)}
                           initialValues={{
                             FirstName: "",
                             LastName: "",

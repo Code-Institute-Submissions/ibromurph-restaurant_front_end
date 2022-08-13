@@ -10,11 +10,12 @@ import MenuCarousel from "./MenuCarouselReducers";
 import Menu from "./MenuReducers";
 import BookingCover from "./BookingCoverReducers";
 import BookingCover2 from "./BookingCover2Reducers";
-
+import Bookings from './BookingsReducers'
 export default combineReducers({
   Menu,
   errors,
   message,
+  Bookings,
   HomePageImg,
   AboutUsArray,
   TimingsArray,

@@ -7,24 +7,27 @@ import { Formik } from "formik";
 import * as yup from "yup";
 import { Time_Hours } from "../DataFiles/Time";
 import { Slots } from "../DataFiles/Slots";
-import { Temp_Time } from "../DataFiles/Temp_Time";
 import { useDispatch, useSelector } from "react-redux";
 import { getBookingCover } from "../../actions/Booking/bookingCoverAction";
 import { getBookingCover2 } from "../../actions/Booking/bookingCover2Action";
 import DateGetter from "../../Functions/DayGetter";
 import TimeGetter from "../../Functions/TimeGetter";
-
+import { addBooking } from "../../actions/Booking/BookingAction";
+import moment from "moment-timezone";
+import TimeConvert from "../../Functions/TimeConvert";
 
 const schemaBookTable = yup.object({
   Time: yup.string().required("Please Pick Time"),
   PartySize: yup.string().required("Choose party time"),
-  Date_event:yup.date().min(new Date(),'Booking Date Cannot be in the past')
-    .max(new Date(Date.now()+7884000000),"Booking within 3 months Date")
-    .required('Booking date is required')
+  Date_event: yup
+    .date()
+    .min(new Date(), "Booking Date Cannot be in the past")
+    .max(new Date(Date.now() + 7884000000), "Booking within 3 months Date")
+    .required("Booking date is required"),
 });
 const schemaBookTableDetails = yup.object({
-  FirstName: yup.string().required("What's you First name?"),
-  LastName: yup.string().required("What's you Last name?"),
+  First_Name: yup.string().required("What's you First name?"),
+  Last_Name: yup.string().required("What's you Last name?"),
   Email: yup.string().email().required("You might need your email later!"),
   Number: yup.string().required("We may need to Contact you for confirmation"),
 });
@@ -33,50 +36,103 @@ const Reserve = () => {
   useEffect(() => {
     dispatch(getBookingCover());
   }, []);
-  useEffect(() => {dispatch(getBookingCover2());}, []);
+  useEffect(() => {
+    dispatch(getBookingCover2());
+  }, []);
 
   const BookingCover = useSelector((state) => state.BookingCover.BookingCover);
-  const BookingCover2 = useSelector((state) => state.BookingCover2.BookingCover2);
-
+  const BookingCover2 = useSelector(
+    (state) => state.BookingCover2.BookingCover2
+  );
+  const Bookings = useSelector((state) => state.Bookings.Bookings);
   const [show, setShow] = useState(true);
   const [showTwo, setShowTwo] = useState(false);
   const [showThree, setShowThree] = useState(false);
-
-  const [Time, setTime] = useState('');
-  const [PartySize, setPartySize] = useState('');
-  const [DateEvent, setDateEvent] = useState('');
-  const [DateEventButton, setDateEventButton] = useState('');
-
-  const [FirstName, setFirstName] = useState('');
-  const [LastName, setLastName] = useState('');
-  const [Email, setEmail] = useState('');
-  const [PhoneNumber, setPhoneNumber] = useState('');
-  const [Get_Emails, setGet_Emails] = useState('');
-  const [Type_of_Booking, setType_of_Booking] = useState('');
-
+  const [Time, setTime] = useState("");
+  const [Party_Size, setPartySize] = useState("");
+  const [Booking_Date, setDateEvent] = useState("");
+  const [Booking_Time, setDateEventButton] = useState("");
+  const [First_Name, setFirst_Name] = useState("");
+  const [Last_Name, setLast_Name] = useState("");
+  const [Email, setEmail] = useState("");
+  const [Telephone_Number, setTelephone_Number] = useState("");
+  const [Get_Emails, setGet_Emails] = useState("");
+  const [Type_of_Booking, setType_of_Booking] = useState(true);
+  const [sendComplete, setSendComplete] = useState(false);
+  const [TableFour, setTableFour] = useState(false);
+  const [BookingDetails, setBookingDetails] = useState(false);
+  const [CancelBookingBool, setCancelBooking] = useState(false);
 
   const TableOne = (values) => {
     setShow(false);
     setShowTwo(true);
     setShowThree(false);
-    setTime(values.Time)
-    setPartySize(values.PartySize)
-    setDateEvent(values.Date_event)
+    setTime(values.Time);
+    setPartySize(values.PartySize);
+    setDateEvent(values.Date_event);
   };
   const TableThree = (value) => {
     setShow(false);
     setShowTwo(false);
     setShowThree(true);
-    setDateEventButton(value)
+    setDateEventButton(value);
   };
   const ReverseTableOne = () => {
     setShow(true);
     setShowTwo(false);
     setShowThree(false);
   };
-  const TableDetails=(values)=>{
-    console.log(values)
+  const TableDetails = (values) => {
+    setFirst_Name(values.First_Name);
+    setLast_Name(values.Last_Name);
+    setEmail(values.Email);
+    setTelephone_Number(values.Number);
+    setGet_Emails(values.GetEmails);
+    const dt = moment(Booking_Time, ["h:mm A"]).format("HH:mm");
+    setDateEventButton(dt);
+    setSendComplete(true)
+  };
+  const CancelBooking=()=>{
+    setCancelBooking(true)
   }
+  useEffect(()=>{
+    if(sendComplete){
+      sendData()
+    }
+  },[sendComplete])
+  useEffect(()=>{
+    if(Bookings.length!==0){
+      console.log(Bookings,setBookingDetails(Bookings[0]))
+    }
+  },[Bookings])
+
+  const sendData=()=>{
+    const data = {
+      First_Name,
+      Last_Name,
+      Email,
+      Telephone_Number,
+      Get_Emails,
+      Type_of_Booking,
+      Party_Size,
+      Booking_Date,
+      Booking_Time,
+    };
+    dispatch(addBooking(data));
+    setSendComplete(false)
+    setFirst_Name('')
+    setLast_Name('')
+    setEmail('')
+    setTelephone_Number('')
+    setGet_Emails('')
+    setType_of_Booking('')
+    setPartySize('')
+    setDateEvent('')
+    setDateEventButton('')
+    setShowThree(false)
+    setTableFour(true)
+  }
+  console.log(BookingDetails)
   return (
     <Fragment>
       <Navbar />
@@ -113,7 +169,7 @@ const Reserve = () => {
                     )}
                   </div>
                   <main className="engine" id="table-one">
-                    <div style={{ display: show === true ? "" : "None" }}>
+                    <div style={{ display: show === false ? "" : "None" }}>
                       <header className="engine__header">
                         <h1 className="title color-text-green">Book a table</h1>
                         <div className="richtext engine__intro">
@@ -301,11 +357,11 @@ const Reserve = () => {
                           <p>
                             Booking for{" "}
                             <span className="color-text-green">
-                              {PartySize}
+                              {Party_Size}
                             </span>{" "}
                             people on{" "}
                             <span className="color-text-green">
-                              {DateGetter(DateEvent)}
+                              {DateGetter(Booking_Date)}
                             </span>
                             .
                           </p>
@@ -313,7 +369,7 @@ const Reserve = () => {
                       </header>
                       <div className="opentable opentable--search">
                         <div className="row ">
-                          {TimeGetter(DateEvent, Time).map((arr, key) => (
+                          {TimeGetter(Booking_Date, Time).map((arr, key) => (
                             <div key={key} className="col-3 mt-3 ">
                               <button
                                 onClick={() => TableThree(arr)}
@@ -344,9 +400,14 @@ const Reserve = () => {
                         <div className="richtext engine__intro">
                           <p>
                             Booking for{" "}
-                            <span className="color-text-green">{PartySize}</span> people
-                            at <span className="color-text-green">{Time}</span>{" "}
-                            {DateGetter(DateEvent)}.
+                            <span className="color-text-green">
+                              {Party_Size}
+                            </span>{" "}
+                            people at{" "}
+                            <span className="color-text-green">
+                              {Booking_Time}
+                            </span>{" "}
+                            {DateGetter(Booking_Date)}.
                           </p>
                         </div>
                       </header>
@@ -356,12 +417,12 @@ const Reserve = () => {
                           validationSchema={schemaBookTableDetails}
                           onSubmit={(values) => TableDetails(values)}
                           initialValues={{
-                            FirstName: "",
-                            LastName: "",
-                            Email: "",
-                            Number: "",
+                            First_Name: First_Name,
+                            Last_Name: Last_Name,
+                            Email: Email,
+                            Number: Telephone_Number,
                             TypeofBooking: "",
-                            GetEmails: "",
+                            GetEmails: Get_Emails,
                           }}
                         >
                           {({
@@ -392,12 +453,12 @@ const Reserve = () => {
                                             type="text"
                                             className="form-control"
                                             id="name"
-                                            name="FirstName"
+                                            name="First_Name"
                                             onChange={handleChange}
-                                            isInvalid={!!errors.FirstName}
+                                            isInvalid={!!errors.First_Name}
                                           />
                                           <Form.Control.Feedback type="invalid">
-                                            {errors.FirstName}
+                                            {errors.First_Name}
                                           </Form.Control.Feedback>
                                         </div>
                                         <div className="col-12 col-lg-6">
@@ -411,12 +472,12 @@ const Reserve = () => {
                                           <Form.Control
                                             type="text"
                                             className="form-control"
-                                            name="LastName"
+                                            name="Last_Name"
                                             onChange={handleChange}
-                                            isInvalid={!!errors.LastName}
+                                            isInvalid={!!errors.Last_Name}
                                           />
                                           <Form.Control.Feedback type="invalid">
-                                            {errors.LastName}
+                                            {errors.Last_Name}
                                           </Form.Control.Feedback>
                                         </div>
                                         <div className="col-12 col-lg-6">
@@ -477,7 +538,7 @@ const Reserve = () => {
                                                 onChange={handleChange}
                                                 type="switch"
                                                 id="custom-switch"
-                                                label="Check this switch"
+                                                label=""
                                               />
                                             </Col>
                                           </Form.Group>
@@ -559,6 +620,196 @@ const Reserve = () => {
                       </div>
                       <i className="icon icon--calendar-white opentable-search__datepicker-icon"></i>
                     </div>
+                    <div style={{display:TableFour===true?"":"None"}}>
+                      <header className="engine__header">
+                        <h1 className="title color-text-green">Your Booking Details</h1>
+                        <div className="richtext engine__intro">
+                          <p>
+                            Booking for{" "}
+                            <span className="color-text-green">
+                              {BookingDetails.Party_Size}
+                            </span>{" "}
+                            people at{" "}
+                            <span className="color-text-green">
+                              {TimeConvert(BookingDetails.Booking_Time)}
+                            </span>{" "}
+                            {DateGetter(BookingDetails.Booking_Date)}.
+                          </p>
+                        </div>
+                      </header>
+
+                      <div className="opentable opentable--details">
+                            <Form>
+                              <div id="reservation_sitting_wrap" className="field field--select-callback required field-select">
+                                <div className="row">
+                                  <div className="col-12">
+                                    <div className="contact-form-area">
+                                      <div className="row">
+                                        <div className="col-12 col-lg-6"><div className="d-flex align-items-center justify-content-between mb-2">
+                                          <span className="font-weight-bold mr-2">Booking ID:</span><span
+                                          className="text-muted text-hover-primary goldenrod_color ">#{BookingDetails.BookingID}</span>
+                                        </div></div>
+                                        <div className="col-12 col-lg-6"><div className="d-flex align-items-center justify-content-between mb-2">
+                                          <span className="font-weight-bold mr-2">Booking Time:</span><span
+                                          className="text-muted text-hover-primary">{BookingDetails.Booking_Time}</span>
+                                        </div></div>
+                                        <div className="col-12 col-lg-6">   <div className="d-flex align-items-center justify-content-between mb-2">
+                                          <span className="font-weight-bold mr-2">Booking Date:</span><span
+                                          className="text-muted text-hover-primary">{BookingDetails.Booking_Date}</span>
+                                        </div></div>
+                                        <div className="col-12 col-lg-6"><div className="d-flex align-items-center justify-content-between mb-2">
+                                          <span className="font-weight-bold mr-2">Party Size:</span><span
+                                          className="text-muted text-hover-primary">{BookingDetails.Party_Size}</span>
+                                        </div></div>
+                                        <div className="col-12 col-lg-6"> <div className="d-flex align-items-center justify-content-between mb-2">
+                                          <span className="font-weight-bold mr-2">First Name:</span><span
+                                          className="text-muted text-hover-primary">{BookingDetails.First_Name}</span>
+                                        </div></div>
+                                        <div className="col-12 col-lg-6"><div className="d-flex align-items-center justify-content-between mb-2">
+                                          <span className="font-weight-bold mr-2">Last Name:</span><span
+                                          className="text-muted text-hover-primary">{BookingDetails.Last_Name}</span>
+                                        </div></div>
+                                        <div className="col-12 col-lg-6"><div className="d-flex align-items-center justify-content-between mb-2">
+                                          <span className="font-weight-bold mr-2">Email:</span><span
+                                          className="text-muted text-hover-primary">{BookingDetails.Email}</span>
+                                        </div></div>
+                                        <div className="col-12 col-lg-6"><div className="d-flex align-items-center justify-content-between mb-2">
+                                          <span className="font-weight-bold mr-2">Telephone Number:</span><span
+                                          className="text-muted text-hover-primary">{BookingDetails.Telephone_Number}</span>
+                                        </div></div>
+
+                                        <div className="col-12 text-center">
+                                          <div className="underline_line" />
+                                          <button
+                                            className="btn"
+                                            style={{background: "transparent",}}
+                                            onClick={() => CancelBooking()}>
+                                            <span className="color-text-green text-capitalize">
+                                              Cancel Booking
+                                            </span>
+                                          </button>
+                                        </div>
+                                      </div>
+                                    </div>
+                                  </div>
+                                </div>
+                              </div>
+                            </Form>
+                      </div>
+                      <i className="icon icon--calendar-white opentable-search__datepicker-icon"></i>
+                    </div>
+                    <div style={{ CancelBookingBool: show === false ? "" : "None" }}>
+                      <header className="engine__header">
+                        <h1 className="title color-text-green">Cancel A booking</h1>
+                        <div className="richtext engine__intro">
+                          <p>Oops! What went wrong?.</p>
+                          <p>You can cancel your booking by enter Email or Booking ID
+                          </p>
+                        </div>
+                      </header>
+                      <div className="opentable opentable--search">
+                        <Formik
+                          // validationSchema={schemaBookTableDetails}
+                          onSubmit={(values) => console.log(values)}
+                          initialValues={{
+                            BookingID: "",
+                            Email: "",
+                            CancelBooking: "",
+                          }}
+                        >
+                          {({
+                              handleSubmit,
+                              handleChange,
+                              values,
+                              touched,
+                              errors,
+                            }) => (
+                            <Form noValidate onSubmit={handleSubmit}>
+                              <div
+                                id="reservation_sitting_wrap"
+                                className="field field--select-callback required field-select"
+                              >
+                                <div className="row">
+                                  <div className="col-12">
+                                    <div className="contact-form-area">
+                                      <div className="row">
+                                        <div className="col-12 col-lg-4">
+                                          <Form.Label className="field__label">
+                                            Email
+                                            <span className="color-text-green">
+                                              {" "}
+                                              *
+                                            </span>
+                                          </Form.Label>
+                                          <Form.Control
+                                            type="text"
+                                            className="form-control"
+                                            id="name"
+                                            name="Email"
+                                            placeholder="Email"
+                                            onChange={handleChange}
+                                            isInvalid={!!errors.Email}
+                                          />
+                                          <Form.Control.Feedback type="invalid">
+                                            {errors.Email}
+                                          </Form.Control.Feedback>
+                                        </div>
+                                        <div className="col-12 col-lg-3 text-center">
+                                          <Form.Label className="field__label">
+                                            <span className="color-text-green">
+                                              -{" "}
+                                            </span>
+                                            OR
+                                            <span className="color-text-green">
+                                              {" "}
+                                              -
+                                            </span>
+                                          </Form.Label>
+
+                                        </div>
+
+                                        <div className="col-12 col-lg-5">
+                                          <Form.Label className="field__label">
+                                            Booking Id
+                                            <span className="color-text-green">
+                                              {" "}
+                                              *
+                                            </span>
+                                          </Form.Label>
+                                          <div className="input-group mb-3">
+                                            <div className="input-group-prepend">
+                                              <span className="input-group-text" id="basic-addon1">#</span>
+                                            </div>
+                                            <Form.Control  style={{width:'50%',marginBottom:'0px'}} type="text" className="form-control" placeholder="Booking ID"/>
+                                          </div>
+                                        </div>
+                                        <div className="col-12 col-lg-12 mt-2">
+                                          <div className="form-check">
+                                            <input
+                                              className="form-check-input"
+                                              type="checkbox"
+                                              value=""
+                                              id="flexCheckDefault"
+                                              name="GetEmails"
+                                              onChange={handleChange}
+                                            />
+                                            <label className="form-check-label" htmlFor="flexCheckDefault">
+                                              Yes, I'm happy to cancel the booking
+                                            </label>
+                                          </div>
+                                        </div>
+                                      </div>
+                                    </div>
+                                  </div>
+                                </div>
+                              </div>
+                            </Form>
+                          )}
+                        </Formik>
+                      </div>
+                      <i className="icon icon--calendar-white opentable-search__datepicker-icon"></i>
+                    </div>
+
                   </main>
                   <i className="icon icon--calendar-white opentable-search__datepicker-icon"></i>
                   <div className="blog-content">

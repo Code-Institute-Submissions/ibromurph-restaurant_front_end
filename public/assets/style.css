@@ -4487,3 +4487,9 @@ select.input {
     -webkit-transform: translateX(5px);
     transform: translateX(5px)
 }
+
+
+.goldenrod_color
+{
+    color: goldenrod !important;
+}

@@ -62,7 +62,8 @@ const Reserve = () => {
   const [TableFour, setTableFour] = useState(false);
   const [BookingDetails, setBookingDetails] = useState(false);
   const [CancelBookingBool, setCancelBooking] = useState(false);
-
+  const [CEmail, setCEmail] = useState('');
+  const [CBookingID, setCBookingID] = useState('');
   const TableOne = (values) => {
     setShow(false);
     setShowTwo(true);
@@ -95,16 +96,22 @@ const Reserve = () => {
   const CancelBooking=()=>{
     setCancelBooking(true)
   }
+
+ const cancelBooking=(e)=>{
+    e.preventDefault()
+
+    console.log(CEmail,CBookingID,"hello world")
+  }
   useEffect(()=>{
     if(sendComplete){
       sendData()
     }
   },[sendComplete])
-  useEffect(()=>{
-    if(Bookings.length!==0){
-      console.log(Bookings,setBookingDetails(Bookings[0]))
-    }
-  },[Bookings])
+  // useEffect(()=>{
+  //   if(Bookings.length!==0){
+  //     console.log(Bookings,setBookingDetails(Bookings[0]))
+  //   }
+  // },[Bookings])
 
   const sendData=()=>{
     const data = {
@@ -132,7 +139,6 @@ const Reserve = () => {
     setShowThree(false)
     setTableFour(true)
   }
-  console.log(BookingDetails)
   return (
     <Fragment>
       <Navbar />
@@ -698,33 +704,21 @@ const Reserve = () => {
                       </div>
                       <i className="icon icon--calendar-white opentable-search__datepicker-icon"></i>
                     </div>
+
+
+
+
                     <div style={{ CancelBookingBool: show === false ? "" : "None" }}>
                       <header className="engine__header">
                         <h1 className="title color-text-green">Cancel A booking</h1>
                         <div className="richtext engine__intro">
                           <p>Oops! What went wrong?.</p>
-                          <p>You can cancel your booking by enter Email or Booking ID
+                          <p>You can cancel your booking by enter <span className="color-text-green">Email</span>  or <span className="color-text-green">Booking ID</span>
                           </p>
                         </div>
                       </header>
                       <div className="opentable opentable--search">
-                        <Formik
-                          // validationSchema={schemaBookTableDetails}
-                          onSubmit={(values) => console.log(values)}
-                          initialValues={{
-                            BookingID: "",
-                            Email: "",
-                            CancelBooking: "",
-                          }}
-                        >
-                          {({
-                              handleSubmit,
-                              handleChange,
-                              values,
-                              touched,
-                              errors,
-                            }) => (
-                            <Form noValidate onSubmit={handleSubmit}>
+                            <Form>
                               <div
                                 id="reservation_sitting_wrap"
                                 className="field field--select-callback required field-select"
@@ -736,10 +730,6 @@ const Reserve = () => {
                                         <div className="col-12 col-lg-4">
                                           <Form.Label className="field__label">
                                             Email
-                                            <span className="color-text-green">
-                                              {" "}
-                                              *
-                                            </span>
                                           </Form.Label>
                                           <Form.Control
                                             type="text"
@@ -747,11 +737,10 @@ const Reserve = () => {
                                             id="name"
                                             name="Email"
                                             placeholder="Email"
-                                            onChange={handleChange}
-                                            isInvalid={!!errors.Email}
+                                            onChange={(e)=>setCEmail(e.target.value)}
                                           />
                                           <Form.Control.Feedback type="invalid">
-                                            {errors.Email}
+                                            {/*{errors.Email}*/}
                                           </Form.Control.Feedback>
                                         </div>
                                         <div className="col-12 col-lg-3 text-center">
@@ -765,38 +754,26 @@ const Reserve = () => {
                                               -
                                             </span>
                                           </Form.Label>
-
                                         </div>
 
                                         <div className="col-12 col-lg-5">
                                           <Form.Label className="field__label">
                                             Booking Id
-                                            <span className="color-text-green">
-                                              {" "}
-                                              *
-                                            </span>
                                           </Form.Label>
                                           <div className="input-group mb-3">
                                             <div className="input-group-prepend">
                                               <span className="input-group-text" id="basic-addon1">#</span>
                                             </div>
-                                            <Form.Control  style={{width:'50%',marginBottom:'0px'}} type="text" className="form-control" placeholder="Booking ID"/>
+                                            <Form.Control  style={{width:'50%',marginBottom:'0px'}} type="text"
+                                                          onChange={(e)=>setCBookingID(e.target.value)} name="BookingID" className="form-control" placeholder="Booking ID"/>
                                           </div>
                                         </div>
-                                        <div className="col-12 col-lg-12 mt-2">
-                                          <div className="form-check">
-                                            <input
-                                              className="form-check-input"
-                                              type="checkbox"
-                                              value=""
-                                              id="flexCheckDefault"
-                                              name="GetEmails"
-                                              onChange={handleChange}
-                                            />
-                                            <label className="form-check-label" htmlFor="flexCheckDefault">
-                                              Yes, I'm happy to cancel the booking
-                                            </label>
-                                          </div>
+                                        <div className="col-12 text-center mt-4">
+                                          <button className="btn btn-danger"
+                                            onClick={(e)=>cancelBooking(e)}
+                                          >
+                                            Cancel booking
+                                          </button>
                                         </div>
                                       </div>
                                     </div>
@@ -804,8 +781,6 @@ const Reserve = () => {
                                 </div>
                               </div>
                             </Form>
-                          )}
-                        </Formik>
                       </div>
                       <i className="icon icon--calendar-white opentable-search__datepicker-icon"></i>
                     </div>

@@ -765,7 +765,9 @@ const Reserve = () => {
                                               <span className="input-group-text" id="basic-addon1">#</span>
                                             </div>
                                             <Form.Control  style={{width:'50%',marginBottom:'0px'}} type="text"
-                                                          onChange={(e)=>setCBookingID(e.target.value)} name="BookingID" className="form-control" placeholder="Booking ID"/>
+                                                          onChange={(e)=>setCBookingID(e.target.value)}  name="BookingID" className="form-control" placeholder="Booking ID"/>
+                                            <Form.Text id="passwordHelpBlock" muted>Booking ID is case Sensitive
+                                            </Form.Text>
                                           </div>
                                         </div>
                                         <div className="col-12 text-center mt-4">

@@ -10,7 +10,10 @@ import MenuCarousel from "./MenuCarouselReducers";
 import Menu from "./MenuReducers";
 import BookingCover from "./BookingCoverReducers";
 import BookingCover2 from "./BookingCover2Reducers";
-import Bookings from './BookingsReducers'
+import Bookings from "./BookingsReducers";
+import cancelArray from "./CancelBookingbid";
+import cancelBookingsData from "./CancelBookingEReducer";
+
 export default combineReducers({
   Menu,
   errors,
@@ -24,4 +27,6 @@ export default combineReducers({
   CarouselPosts,
   BookingCover2,
   InstagramPosts,
+  cancelArray,
+  cancelBookingsData,
 });

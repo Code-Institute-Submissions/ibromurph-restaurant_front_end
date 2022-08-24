@@ -2,7 +2,7 @@ import { Fragment, useEffect, useState } from "react";
 import Navbar from "../Navbar";
 import Instagram from "../Instagram";
 import Footer from "../Footer";
-import { Col, Form, Row } from "react-bootstrap";
+import { Card, Col, Form, Row } from "react-bootstrap";
 import { Formik } from "formik";
 import * as yup from "yup";
 import { Time_Hours } from "../DataFiles/Time";
@@ -15,6 +15,10 @@ import TimeGetter from "../../Functions/TimeGetter";
 import { addBooking } from "../../actions/Booking/BookingAction";
 import moment from "moment-timezone";
 import TimeConvert from "../../Functions/TimeConvert";
+import {
+  CancelBookingViaBID,
+  CancelBookingViaEmail,
+} from "../../actions/Booking/CancelBookingAction";
 
 const schemaBookTable = yup.object({
   Time: yup.string().required("Please Pick Time"),
@@ -25,6 +29,23 @@ const schemaBookTable = yup.object({
     .max(new Date(Date.now() + 7884000000), "Booking within 3 months Date")
     .required("Booking date is required"),
 });
+const schemaCancelBooking = yup.object().shape(
+  {
+    Email: yup.string().when("BookingID", {
+      is: (BookingID) => !BookingID || BookingID.length === 0,
+      then: yup
+        .string()
+        .email("Please Enter Valid Email")
+        .required("At least one of the fields is required"),
+    }),
+    BookingID: yup.string().when("Email", {
+      is: (Email) => !Email || Email.length === 0,
+      then: yup.string().required("At least one of the fields is required"),
+    }),
+  },
+  ["Email", "BookingID"]
+);
+
 const schemaBookTableDetails = yup.object({
   First_Name: yup.string().required("What's you First name?"),
   Last_Name: yup.string().required("What's you Last name?"),
@@ -45,6 +66,8 @@ const Reserve = () => {
     (state) => state.BookingCover2.BookingCover2
   );
   const Bookings = useSelector((state) => state.Bookings.Bookings);
+  const CancelBooking_Bool = useSelector((state) => state.cancelArray);
+  const BookingEmails = useSelector((state) => state.cancelBookingsData);
   const [show, setShow] = useState(true);
   const [showTwo, setShowTwo] = useState(false);
   const [showThree, setShowThree] = useState(false);
@@ -62,8 +85,6 @@ const Reserve = () => {
   const [TableFour, setTableFour] = useState(false);
   const [BookingDetails, setBookingDetails] = useState(false);
   const [CancelBookingBool, setCancelBooking] = useState(false);
-  const [CEmail, setCEmail] = useState('');
-  const [CBookingID, setCBookingID] = useState('');
   const TableOne = (values) => {
     setShow(false);
     setShowTwo(true);
@@ -91,29 +112,31 @@ const Reserve = () => {
     setGet_Emails(values.GetEmails);
     const dt = moment(Booking_Time, ["h:mm A"]).format("HH:mm");
     setDateEventButton(dt);
-    setSendComplete(true)
+    setSendComplete(true);
   };
-  const CancelBooking=()=>{
-    setCancelBooking(true)
-  }
+  const CancelBooking = () => {
+    setCancelBooking(true);
+  };
 
- const cancelBooking=(e)=>{
-    e.preventDefault()
-
-    console.log(CEmail,CBookingID,"hello world")
-  }
-  useEffect(()=>{
-    if(sendComplete){
-      sendData()
+  const cancelBooking = (data) => {
+    if (data.BookingID !== "") {
+      dispatch(CancelBookingViaBID(data.BookingID));
+    } else {
+      dispatch(CancelBookingViaEmail(data.Email));
     }
-  },[sendComplete])
+  };
+  useEffect(() => {
+    if (sendComplete) {
+      sendData();
+    }
+  }, [sendComplete]);
   // useEffect(()=>{
   //   if(Bookings.length!==0){
   //     console.log(Bookings,setBookingDetails(Bookings[0]))
   //   }
   // },[Bookings])
 
-  const sendData=()=>{
+  const sendData = () => {
     const data = {
       First_Name,
       Last_Name,
@@ -126,19 +149,19 @@ const Reserve = () => {
       Booking_Time,
     };
     dispatch(addBooking(data));
-    setSendComplete(false)
-    setFirst_Name('')
-    setLast_Name('')
-    setEmail('')
-    setTelephone_Number('')
-    setGet_Emails('')
-    setType_of_Booking('')
-    setPartySize('')
-    setDateEvent('')
-    setDateEventButton('')
-    setShowThree(false)
-    setTableFour(true)
-  }
+    setSendComplete(false);
+    setFirst_Name("");
+    setLast_Name("");
+    setEmail("");
+    setTelephone_Number("");
+    setGet_Emails("");
+    setType_of_Booking("");
+    setPartySize("");
+    setDateEvent("");
+    setDateEventButton("");
+    setShowThree(false);
+    setTableFour(true);
+  };
   return (
     <Fragment>
       <Navbar />
@@ -626,9 +649,11 @@ const Reserve = () => {
                       </div>
                       <i className="icon icon--calendar-white opentable-search__datepicker-icon"></i>
                     </div>
-                    <div style={{display:TableFour===true?"":"None"}}>
+                    <div style={{ display: TableFour === true ? "" : "None" }}>
                       <header className="engine__header">
-                        <h1 className="title color-text-green">Your Booking Details</h1>
+                        <h1 className="title color-text-green">
+                          Your Booking Details
+                        </h1>
                         <div className="richtext engine__intro">
                           <p>
                             Booking for{" "}
@@ -645,148 +670,399 @@ const Reserve = () => {
                       </header>
 
                       <div className="opentable opentable--details">
-                            <Form>
-                              <div id="reservation_sitting_wrap" className="field field--select-callback required field-select">
-                                <div className="row">
-                                  <div className="col-12">
-                                    <div className="contact-form-area">
-                                      <div className="row">
-                                        <div className="col-12 col-lg-6"><div className="d-flex align-items-center justify-content-between mb-2">
-                                          <span className="font-weight-bold mr-2">Booking ID:</span><span
-                                          className="text-muted text-hover-primary goldenrod_color ">#{BookingDetails.BookingID}</span>
-                                        </div></div>
-                                        <div className="col-12 col-lg-6"><div className="d-flex align-items-center justify-content-between mb-2">
-                                          <span className="font-weight-bold mr-2">Booking Time:</span><span
-                                          className="text-muted text-hover-primary">{BookingDetails.Booking_Time}</span>
-                                        </div></div>
-                                        <div className="col-12 col-lg-6">   <div className="d-flex align-items-center justify-content-between mb-2">
-                                          <span className="font-weight-bold mr-2">Booking Date:</span><span
-                                          className="text-muted text-hover-primary">{BookingDetails.Booking_Date}</span>
-                                        </div></div>
-                                        <div className="col-12 col-lg-6"><div className="d-flex align-items-center justify-content-between mb-2">
-                                          <span className="font-weight-bold mr-2">Party Size:</span><span
-                                          className="text-muted text-hover-primary">{BookingDetails.Party_Size}</span>
-                                        </div></div>
-                                        <div className="col-12 col-lg-6"> <div className="d-flex align-items-center justify-content-between mb-2">
-                                          <span className="font-weight-bold mr-2">First Name:</span><span
-                                          className="text-muted text-hover-primary">{BookingDetails.First_Name}</span>
-                                        </div></div>
-                                        <div className="col-12 col-lg-6"><div className="d-flex align-items-center justify-content-between mb-2">
-                                          <span className="font-weight-bold mr-2">Last Name:</span><span
-                                          className="text-muted text-hover-primary">{BookingDetails.Last_Name}</span>
-                                        </div></div>
-                                        <div className="col-12 col-lg-6"><div className="d-flex align-items-center justify-content-between mb-2">
-                                          <span className="font-weight-bold mr-2">Email:</span><span
-                                          className="text-muted text-hover-primary">{BookingDetails.Email}</span>
-                                        </div></div>
-                                        <div className="col-12 col-lg-6"><div className="d-flex align-items-center justify-content-between mb-2">
-                                          <span className="font-weight-bold mr-2">Telephone Number:</span><span
-                                          className="text-muted text-hover-primary">{BookingDetails.Telephone_Number}</span>
-                                        </div></div>
-
-                                        <div className="col-12 text-center">
-                                          <div className="underline_line" />
-                                          <button
-                                            className="btn"
-                                            style={{background: "transparent",}}
-                                            onClick={() => CancelBooking()}>
-                                            <span className="color-text-green text-capitalize">
-                                              Cancel Booking
-                                            </span>
-                                          </button>
-                                        </div>
+                        <Form>
+                          <div
+                            id="reservation_sitting_wrap"
+                            className="field field--select-callback required field-select"
+                          >
+                            <div className="row">
+                              <div className="col-12">
+                                <div className="contact-form-area">
+                                  <div className="row">
+                                    <div className="col-12 col-lg-6">
+                                      <div className="d-flex align-items-center justify-content-between mb-2">
+                                        <span className="font-weight-bold mr-2">
+                                          Booking ID:
+                                        </span>
+                                        <span className="text-muted text-hover-primary goldenrod_color ">
+                                          #{BookingDetails.BookingID}
+                                        </span>
                                       </div>
+                                    </div>
+                                    <div className="col-12 col-lg-6">
+                                      <div className="d-flex align-items-center justify-content-between mb-2">
+                                        <span className="font-weight-bold mr-2">
+                                          Booking Time:
+                                        </span>
+                                        <span className="text-muted text-hover-primary">
+                                          {BookingDetails.Booking_Time}
+                                        </span>
+                                      </div>
+                                    </div>
+                                    <div className="col-12 col-lg-6">
+                                      <div className="d-flex align-items-center justify-content-between mb-2">
+                                        <span className="font-weight-bold mr-2">
+                                          Booking Date:
+                                        </span>
+                                        <span className="text-muted text-hover-primary">
+                                          {BookingDetails.Booking_Date}
+                                        </span>
+                                      </div>
+                                    </div>
+                                    <div className="col-12 col-lg-6">
+                                      <div className="d-flex align-items-center justify-content-between mb-2">
+                                        <span className="font-weight-bold mr-2">
+                                          Party Size:
+                                        </span>
+                                        <span className="text-muted text-hover-primary">
+                                          {BookingDetails.Party_Size}
+                                        </span>
+                                      </div>
+                                    </div>
+                                    <div className="col-12 col-lg-6">
+                                      <div className="d-flex align-items-center justify-content-between mb-2">
+                                        <span className="font-weight-bold mr-2">
+                                          First Name:
+                                        </span>
+                                        <span className="text-muted text-hover-primary">
+                                          {BookingDetails.First_Name}
+                                        </span>
+                                      </div>
+                                    </div>
+                                    <div className="col-12 col-lg-6">
+                                      <div className="d-flex align-items-center justify-content-between mb-2">
+                                        <span className="font-weight-bold mr-2">
+                                          Last Name:
+                                        </span>
+                                        <span className="text-muted text-hover-primary">
+                                          {BookingDetails.Last_Name}
+                                        </span>
+                                      </div>
+                                    </div>
+                                    <div className="col-12 col-lg-6">
+                                      <div className="d-flex align-items-center justify-content-between mb-2">
+                                        <span className="font-weight-bold mr-2">
+                                          Email:
+                                        </span>
+                                        <span className="text-muted text-hover-primary">
+                                          {BookingDetails.Email}
+                                        </span>
+                                      </div>
+                                    </div>
+                                    <div className="col-12 col-lg-6">
+                                      <div className="d-flex align-items-center justify-content-between mb-2">
+                                        <span className="font-weight-bold mr-2">
+                                          Telephone Number:
+                                        </span>
+                                        <span className="text-muted text-hover-primary">
+                                          {BookingDetails.Telephone_Number}
+                                        </span>
+                                      </div>
+                                    </div>
+
+                                    <div className="col-12 text-center">
+                                      <div className="underline_line" />
+                                      <button
+                                        className="btn"
+                                        style={{ background: "transparent" }}
+                                        onClick={() => CancelBooking()}
+                                      >
+                                        <span className="color-text-green text-capitalize">
+                                          Cancel Booking
+                                        </span>
+                                      </button>
                                     </div>
                                   </div>
                                 </div>
                               </div>
-                            </Form>
+                            </div>
+                          </div>
+                        </Form>
                       </div>
                       <i className="icon icon--calendar-white opentable-search__datepicker-icon"></i>
                     </div>
 
-
-
-
-                    <div style={{ CancelBookingBool: show === false ? "" : "None" }}>
-                      <header className="engine__header">
-                        <h1 className="title color-text-green">Cancel A booking</h1>
-                        <div className="richtext engine__intro">
-                          <p>Oops! What went wrong?.</p>
-                          <p>You can cancel your booking by enter <span className="color-text-green">Email</span>  or <span className="color-text-green">Booking ID</span>
-                          </p>
-                        </div>
-                      </header>
-                      <div className="opentable opentable--search">
-                            <Form>
-                              <div
-                                id="reservation_sitting_wrap"
-                                className="field field--select-callback required field-select"
-                              >
-                                <div className="row">
-                                  <div className="col-12">
-                                    <div className="contact-form-area">
-                                      <div className="row">
-                                        <div className="col-12 col-lg-4">
-                                          <Form.Label className="field__label">
-                                            Email
-                                          </Form.Label>
-                                          <Form.Control
-                                            type="text"
-                                            className="form-control"
-                                            id="name"
-                                            name="Email"
-                                            placeholder="Email"
-                                            onChange={(e)=>setCEmail(e.target.value)}
-                                          />
-                                          <Form.Control.Feedback type="invalid">
-                                            {/*{errors.Email}*/}
-                                          </Form.Control.Feedback>
-                                        </div>
-                                        <div className="col-12 col-lg-3 text-center">
-                                          <Form.Label className="field__label">
-                                            <span className="color-text-green">
-                                              -{" "}
-                                            </span>
-                                            OR
-                                            <span className="color-text-green">
-                                              {" "}
-                                              -
-                                            </span>
-                                          </Form.Label>
-                                        </div>
-
-                                        <div className="col-12 col-lg-5">
-                                          <Form.Label className="field__label">
-                                            Booking Id
-                                          </Form.Label>
-                                          <div className="input-group mb-3">
-                                            <div className="input-group-prepend">
-                                              <span className="input-group-text" id="basic-addon1">#</span>
-                                            </div>
-                                            <Form.Control  style={{width:'50%',marginBottom:'0px'}} type="text"
-                                                          onChange={(e)=>setCBookingID(e.target.value)}  name="BookingID" className="form-control" placeholder="Booking ID"/>
-                                            <Form.Text id="passwordHelpBlock" muted>Booking ID is case Sensitive
-                                            </Form.Text>
+                    {(() => {
+                      if (CancelBooking_Bool.isCancelled) {
+                        return (
+                          <div>
+                            <header className="engine__header">
+                              <h1 className="title color-text-green">
+                                Your Booking is Cancelled
+                              </h1>
+                              <div className="richtext engine__intro">
+                                <p>
+                                  We are sorry that you have cancelled the
+                                  booking{" "}
+                                </p>
+                                <p>You can Still make a new reservation</p>
+                              </div>
+                            </header>
+                            <div className="opentable opentable--search">
+                              <Form>
+                                <div
+                                  id="reservation_sitting_wrap"
+                                  className="field field--select-callback required field-select"
+                                >
+                                  <div className="row">
+                                    <div className="col-12">
+                                      <div className="contact-form-area">
+                                        <div className="row">
+                                          <div className="col-12 text-center mt-4">
+                                            <button
+                                              className="btn btn-outline-success"
+                                              onClick={() => setShow(true)}
+                                            >
+                                              Make a new reservation
+                                            </button>
                                           </div>
                                         </div>
-                                        <div className="col-12 text-center mt-4">
-                                          <button className="btn btn-danger"
-                                            onClick={(e)=>cancelBooking(e)}
-                                          >
-                                            Cancel booking
-                                          </button>
-                                        </div>
                                       </div>
                                     </div>
                                   </div>
                                 </div>
+                              </Form>
+                            </div>
+                            <i className="icon icon--calendar-white opentable-search__datepicker-icon"></i>
+                          </div>
+                        );
+                      }
+                      if (BookingEmails.cancelBookingsData.length !== 0) {
+                        return (
+                          <Fragment>
+                            <header className="engine__header">
+                              <h1 className="title color-text-green">
+                                CHOOSE A Booking to Cancel
+                              </h1>
+                              <div className="richtext engine__intro">
+                                <p>
+                                  {" "}
+                                  You can reach us anytime via email or Phone
+                                  number
+                                </p>
                               </div>
-                            </Form>
-                      </div>
-                      <i className="icon icon--calendar-white opentable-search__datepicker-icon"></i>
-                    </div>
+                            </header>
+                            <div className="opentable opentable--search">
+                              <div className="row ">
+                                {BookingEmails.cancelBookingsData
+                                  .filter(
+                                    (arr) => arr.Status_booking === "Confirmed"
+                                  )
+                                  .map((arr, key) => (
+                                    <div key={key} className="col-6 mt-3 ">
+                                      <Card
+                                        style={{
+                                          textAlign: "left",
+                                          width: "18rem",
+                                        }}
+                                      >
+                                        <Card.Body>
+                                          <Card.Text>
+                                            Booking ID:{" "}
+                                            <span className="goldenrod_color">
+                                              #{arr.BookingID}
+                                            </span>
+                                          </Card.Text>
+                                          <Card.Text>
+                                            Name:&nbsp;
+                                            <span className="text-capitalize">
+                                              {arr.First_Name}&nbsp;
+                                              {arr.Last_Name}
+                                            </span>
+                                            <br />
+                                            Party Size:&nbsp;{arr.Party_Size}
+                                            <br />
+                                            Email:&nbsp;{arr.Email}
+                                            <br />
+                                            {TimeConvert(
+                                              arr.Booking_Time
+                                            )} at {DateGetter(arr.Booking_Date)}
+                                            <button
+                                              onClick={() =>
+                                                dispatch(
+                                                  CancelBookingViaBID(
+                                                    arr.BookingID
+                                                  )
+                                                )
+                                              }
+                                              className="btn btn-outline-danger opentable-slots__time"
+                                            >
+                                              <span>Cancel Booking</span>
+                                            </button>
+                                          </Card.Text>
+                                        </Card.Body>
+                                      </Card>
+                                    </div>
+                                  ))}
+                              </div>
+                            </div>
+                            <header className="engine__header">
+                              <div className="engine__intro"></div>
+                            </header>
+                            <button
+                              className="btn"
+                              style={{ background: "transparent" }}
+                              onClick={() => ReverseTableOne()}
+                            >
+                              <span className="color-text-green text-capitalize">
+                                SEARCH AGAIN
+                              </span>
+                            </button>
+                          </Fragment>
+                        );
+                      } else {
+                        return (
+                          <div
+                            style={{
+                              CancelBookingBool: show === false ? "" : "None",
+                            }}
+                          >
+                            <header className="engine__header">
+                              <h1 className="title color-text-green">
+                                Cancel A booking
+                              </h1>
+                              <div className="richtext engine__intro">
+                                <p>Oops! What went wrong?.</p>
+                                <p>
+                                  You can cancel your booking by either{" "}
+                                  <span className="color-text-green">
+                                    Email
+                                  </span>{" "}
+                                  or{" "}
+                                  <span className="color-text-green">
+                                    Booking ID
+                                  </span>
+                                </p>
+                              </div>
+                            </header>
+                            <div className="opentable opentable--search">
+                              <Formik
+                                validationSchema={schemaCancelBooking}
+                                onSubmit={(values) => cancelBooking(values)}
+                                initialValues={{
+                                  Email: "",
+                                  BookingID: "",
+                                }}
+                              >
+                                {({
+                                  handleSubmit,
+                                  handleChange,
+                                  values,
+                                  touched,
+                                  errors,
+                                  setFieldValue,
+                                }) => (
+                                  <Form noValidate onSubmit={handleSubmit}>
+                                    <div
+                                      id="reservation_sitting_wrap"
+                                      className="field field--select-callback required field-select"
+                                    >
+                                      <div className="row">
+                                        <div className="col-12">
+                                          <div className="contact-form-area">
+                                            <div className="row">
+                                              <div className="col-12 col-lg-5">
+                                                <Form.Label className="field__label">
+                                                  Email
+                                                </Form.Label>
+                                                <Form.Control
+                                                  type="text"
+                                                  className="form-control"
+                                                  id="name"
+                                                  name="Email"
+                                                  value={values.Email}
+                                                  placeholder="Email"
+                                                  onKeyUp={() =>
+                                                    setFieldValue(
+                                                      "BookingID",
+                                                      ""
+                                                    )
+                                                  }
+                                                  isInvalid={!!errors.Email}
+                                                  onChange={handleChange}
+                                                />
+                                                <Form.Control.Feedback type="invalid">
+                                                  {errors.Email}
+                                                </Form.Control.Feedback>
+                                              </div>
+                                              <div className="col-12 col-lg-2 text-center">
+                                                <Form.Label className="field__label">
+                                                  <span className="color-text-green">
+                                                    -{" "}
+                                                  </span>
+                                                  OR
+                                                  <span className="color-text-green">
+                                                    {" "}
+                                                    -
+                                                  </span>
+                                                </Form.Label>
+                                              </div>
 
+                                              <div className="col-12 col-lg-5">
+                                                <Form.Label className="field__label">
+                                                  Booking Id
+                                                </Form.Label>
+                                                <div className="input-group mb-3">
+                                                  <div className="input-group-prepend">
+                                                    <span
+                                                      className="input-group-text"
+                                                      id="basic-addon1"
+                                                    >
+                                                      #
+                                                    </span>
+                                                  </div>
+                                                  <Form.Control
+                                                    style={{
+                                                      width: "50%",
+                                                      marginBottom: "0px",
+                                                    }}
+                                                    type="text"
+                                                    value={values.BookingID}
+                                                    onChange={handleChange}
+                                                    onKeyUp={() =>
+                                                      setFieldValue("Email", "")
+                                                    }
+                                                    isInvalid={
+                                                      !!errors.BookingID
+                                                    }
+                                                    name="BookingID"
+                                                    className="form-control"
+                                                    placeholder="Booking ID"
+                                                  />
+                                                  <Form.Control.Feedback type="invalid">
+                                                    {errors.BookingID}
+                                                  </Form.Control.Feedback>
+                                                  <Form.Text
+                                                    id="passwordHelpBlock"
+                                                    muted
+                                                  >
+                                                    Booking ID is case Sensitive
+                                                  </Form.Text>
+                                                </div>
+                                              </div>
+                                              <div className="col-12 text-center mt-4">
+                                                <button
+                                                  className="btn btn-danger"
+                                                  type="submit"
+                                                  // onClick={(e)=>cancelBooking(e)}
+                                                >
+                                                  Cancel booking
+                                                </button>
+                                              </div>
+                                            </div>
+                                          </div>
+                                        </div>
+                                      </div>
+                                    </div>
+                                  </Form>
+                                )}
+                              </Formik>
+                            </div>
+                            <i className="icon icon--calendar-white opentable-search__datepicker-icon"></i>
+                          </div>
+                        );
+                      }
+                    })()}
                   </main>
                   <i className="icon icon--calendar-white opentable-search__datepicker-icon"></i>
                   <div className="blog-content">

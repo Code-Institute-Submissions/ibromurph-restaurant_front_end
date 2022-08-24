@@ -7,6 +7,7 @@ import {
 const initialState = {
   isLoading: false,
   isFailed: false,
+  isCancelled: false,
   cancelBookingsData: [],
 };
 
@@ -31,8 +32,8 @@ export default function (state = initialState, action) {
     case ERROR_BOOKING_DETAILS_EMAIL:
       return {
         ...state,
-        isFailed: true,
         isLoading: false,
+        isFailed: true,
         cancelBookingsData: [],
       };
     default:

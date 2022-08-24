@@ -1,14 +1,14 @@
 import {
   ERROR_BOOKING_DETAILS_BID,
   CANCEL_BOOKING_BID,
-  CANCEL_BOOKING_BID_LOADING
+  CANCEL_BOOKING_BID_LOADING,
 } from "../actions/types";
 
 const initialState = {
   isCancelled: false,
   isFailed: false,
-  isLoading:false,
-  cancelArray:[],
+  isLoading: false,
+  cancelArray: [],
 };
 
 // eslint-disable-next-line
@@ -19,13 +19,14 @@ export default function (state = initialState, action) {
         ...state,
         isCancelled: false,
         isLoading: true,
-        isFailed: false
-      }
+        isFailed: false,
+      };
     case CANCEL_BOOKING_BID:
       return {
         ...state,
         isCancelled: true,
         isFailed: false,
+        isLoading: false,
       };
 
     case ERROR_BOOKING_DETAILS_BID:
@@ -33,6 +34,7 @@ export default function (state = initialState, action) {
         ...state,
         isFailed: true,
         isCancelled: false,
+        isLoading: false,
       };
     default:
       return state;

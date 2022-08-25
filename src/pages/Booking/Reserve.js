@@ -11,15 +11,15 @@ import { useDispatch, useSelector } from "react-redux";
 import { getBookingCover } from "../../actions/Booking/bookingCoverAction";
 import { getBookingCover2 } from "../../actions/Booking/bookingCover2Action";
 import DateGetter from "../../Functions/DayGetter";
-import TimeGetter from "../../Functions/TimeGetter";
 import { addBooking } from "../../actions/Booking/BookingAction";
-import moment from "moment-timezone";
 import TimeConvert from "../../Functions/TimeConvert";
 import {
   CancelBookingViaBID,
   CancelBookingViaEmail,
 } from "../../actions/Booking/CancelBookingAction";
-import {InfinitySpin} from 'react-loader-spinner'
+import { InfinitySpin } from "react-loader-spinner";
+import { CheckAvailableBookings } from "../../actions/Booking/CheckBookingsAction";
+import toast from "react-hot-toast";
 
 const schemaBookTable = yup.object({
   Time: yup.string().required("Please Pick Time"),
@@ -66,10 +66,11 @@ const Reserve = () => {
   const BookingCover2 = useSelector(
     (state) => state.BookingCover2.BookingCover2
   );
+  const message = useSelector((state) => state.message.message);
+  const Slots_check = useSelector((state) => state.CheckBookingArray);
   const Bookings = useSelector((state) => state.Bookings);
   const CancelBooking_Bool = useSelector((state) => state.cancelArray);
   const BookingEmails = useSelector((state) => state.cancelBookingsData);
-  // console.log(CancelBooking_Bool)
   const [show, setShow] = useState(true);
   const [showTwo, setShowTwo] = useState(false);
   const [showThree, setShowThree] = useState(false);
@@ -90,6 +91,9 @@ const Reserve = () => {
   const [TableFour, setTableFour] = useState(false);
   const [BookingDetails, setBookingDetails] = useState(false);
   const [CancelBookingBool, setCancelBooking] = useState(false);
+  const [SlotsFind, setSlotsFind] = useState([]);
+  const [NoDataFound, setNoDataFound] = useState(false);
+
   const TableOne = (values) => {
     setShow(false);
     setShowTwo(true);
@@ -97,6 +101,11 @@ const Reserve = () => {
     setTime(values.Time);
     setPartySize(values.PartySize);
     setDateEvent(values.Date_event);
+    const Booking_Date = values.Date_event;
+    const Booking_Time = values.Time;
+    const Party_Size = values.PartySize;
+    const data = { Booking_Time, Booking_Date, Party_Size };
+    dispatch(CheckAvailableBookings(data));
   };
   const StartReservation = () => {
     setShow(true);
@@ -122,7 +131,8 @@ const Reserve = () => {
     setEmail(values.Email);
     setTelephone_Number(values.Number);
     setGet_Emails(values.GetEmails);
-    const dt = moment(Booking_Time, ["h:mm A"]).format("HH:mm");
+    // const dt = moment(Booking_Time, ["h:mm A"]).format("HH:mm");
+    const dt = Booking_Time;
     setDateEventButton(dt);
     setSendComplete(true);
   };
@@ -132,9 +142,9 @@ const Reserve = () => {
     setShowThree(false);
     setTableFour(false);
     setCancelBooking(true);
-    setCancelBookingLoading(false)
-    setCancelBookingCheck(false)
-    setCancelBookingEmail(false)
+    setCancelBookingLoading(false);
+    setCancelBookingCheck(false);
+    setCancelBookingEmail(false);
   };
   const sendData = () => {
     const data = {
@@ -166,7 +176,7 @@ const Reserve = () => {
     if (data.BookingID !== "") {
       dispatch(CancelBookingViaBID(data.BookingID));
     } else {
-      dispatch(CancelBookingViaEmail(data.Email));
+      dispatch(CancelBookingViaEmail(data.Email.toLowerCase()));
     }
   };
   useEffect(() => {
@@ -174,35 +184,64 @@ const Reserve = () => {
       sendData();
     }
   }, [sendComplete]);
-  useEffect(()=>{
-    if(Bookings.Bookings.length!==0){
-      setBookingDetails(Bookings.Bookings[0])
+  useEffect(() => {
+    if (Bookings.Bookings.length !== 0) {
+      setBookingDetails(Bookings.Bookings[0]);
     }
-  },[Bookings])
-  useEffect(()=>{
-    if (CancelBooking_Bool.isLoading){
-      setCancelBookingLoading(true)
+  }, [Bookings]);
+  useEffect(() => {
+    if (CancelBooking_Bool.isLoading) {
+      setCancelBookingLoading(true);
+    } else {
+      setCancelBookingLoading(false);
     }
-    else {
-      setCancelBookingLoading(false)
+  }, [CancelBooking_Bool]);
+  useEffect(() => {
+    if (CancelBooking_Bool.isCancelled) {
+      setCancelBookingCheck(true);
+    } else {
+      setCancelBookingCheck(false);
     }
-  },[CancelBooking_Bool])
-  useEffect(()=>{
-    if (CancelBooking_Bool.isCancelled){
-      setCancelBookingCheck(true)
+  }, [CancelBooking_Bool]);
+  useEffect(() => {
+    if (BookingEmails.cancelBookingsData.length !== 0) {
+      setCancelBookingEmail(true);
+    } else {
+      setCancelBookingEmail(false);
     }
-    else {
-      setCancelBookingCheck(false)
+  }, [BookingEmails]);
+  useEffect(() => {
+    if (Slots_check.CheckBookingArray.Slots !== undefined) {
+      setSlotsFind(Slots_check.CheckBookingArray.Slots);
     }
-  },[CancelBooking_Bool])
-  useEffect(()=>{
-    if (BookingEmails.cancelBookingsData.length !== 0){
-      setCancelBookingEmail(true)
+    if (Slots_check.CheckBookingArray.message !== undefined) {
+      setNoDataFound(true);
     }
-    else {
-      setCancelBookingEmail(false)
+  }, [Slots_check.CheckBookingArray]);
+  useEffect(() => {
+    if (message) {
+      toast.error(message);
     }
-  },[BookingEmails])
+  }, [message]);
+  // useEffect(()=>{
+  //   toast("Hello World")
+  //
+  //   let tostid=undefined
+  //   if(Bookings.isLoading){
+  //     tostid=toast.loading('Making your Booking')
+  //
+  //   }
+  //   if (Bookings.Bookings.length!==0){
+  //     toast.success('Booked!')
+  //     toast.dismiss(tostid)
+  //   }
+  //   if(Bookings.isFailed){
+  //   toast.error('Oops booking Failed')
+  //     toast.dismiss(tostid)
+  //
+  //   }
+  // },[Bookings.isLoading])
+
   return (
     <Fragment>
       <Navbar />
@@ -231,6 +270,8 @@ const Reserve = () => {
             <div className="col-12 col-lg-12">
               <div className="blog-posts-area">
                 <div className="single-blog-area mb-80">
+                  {/*<button onClick={notify}>Make me a toast</button>*/}
+
                   <div className="banner">
                     {BookingCover2.length !== 0 ? (
                       <img src={BookingCover2[0].cover_Img} alt="" />
@@ -240,67 +281,71 @@ const Reserve = () => {
                   </div>
                   <main className="engine" id="table-one">
                     {(() => {
-                      if (Bookings.isLoading){return (
-                        <div>
-                          <header className="engine__header">
-                            <h1 className="title color-text-green">
-                              Making your Booking
-                            </h1>
-                            <div className="richtext engine__intro">
-                              <p>Please Wait While we are making your reservation</p>
+                      if (Bookings.isLoading) {
+                        return (
+                          <div>
+                            <header className="engine__header">
+                              <h1 className="title color-text-green">
+                                Making your Booking
+                              </h1>
+                              <div className="richtext engine__intro">
+                                <p>
+                                  Please Wait While we are making your
+                                  reservation
+                                </p>
+                              </div>
+                            </header>
+                            <div className="opentable opentable--search">
+                              <InfinitySpin width="200" color="#4fa94d" />
                             </div>
-                          </header>
-                          <div className="opentable opentable--search">
-                            <InfinitySpin
-                              width='200'
-                              color="#4fa94d"
-                            />
-                          </div>
-                          <i className="icon icon--calendar-white opentable-search__datepicker-icon"></i>
-                          <header className="engine__header">
-                            <div className="engine__intro"></div>
-                          </header>
-                          <button
-                            className="btn"
-                            style={{ background: "transparent" }}
-                            onClick={() => CancelBooking()}
-                          >
+                            <i className="icon icon--calendar-white opentable-search__datepicker-icon"></i>
+                            <header className="engine__header">
+                              <div className="engine__intro"></div>
+                            </header>
+                            <button
+                              className="btn"
+                              style={{ background: "transparent" }}
+                              onClick={() => CancelBooking()}
+                            >
                               <span className="color-text-green text-capitalize">
                                 Cancel Booking
                               </span>
-                          </button>
-                        </div>
-                      )}
-                      if (CancelBookingLoading){
-                        return (<div>
-                          <header className="engine__header">
-                            <h1 className="title color-text-green">
-                              Cancelling your booking
-                            </h1>
-                            <div className="richtext engine__intro">
-                              <p>Please Wait While we are cancelling your reservation</p>
-                            </div>
-                          </header>
-                          <div className="opentable opentable--search">
-                            <InfinitySpin
-                              width='200'
-                              color="#4fa94d"
-                            />
+                            </button>
                           </div>
-                          <i className="icon icon--calendar-white opentable-search__datepicker-icon"></i>
-                          <header className="engine__header">
-                            <div className="engine__intro"></div>
-                          </header>
-                          <button
-                            className="btn"
-                            style={{ background: "transparent" }}
-                            onClick={() => CancelBooking()}
-                          >
+                        );
+                      }
+                      if (CancelBookingLoading) {
+                        return (
+                          <div>
+                            <header className="engine__header">
+                              <h1 className="title color-text-green">
+                                Cancelling your booking
+                              </h1>
+                              <div className="richtext engine__intro">
+                                <p>
+                                  Please Wait While we are cancelling your
+                                  reservation
+                                </p>
+                              </div>
+                            </header>
+                            <div className="opentable opentable--search">
+                              <InfinitySpin width="200" color="#4fa94d" />
+                            </div>
+                            <i className="icon icon--calendar-white opentable-search__datepicker-icon"></i>
+                            <header className="engine__header">
+                              <div className="engine__intro"></div>
+                            </header>
+                            <button
+                              className="btn"
+                              style={{ background: "transparent" }}
+                              onClick={() => CancelBooking()}
+                            >
                               <span className="color-text-green text-capitalize">
                                 Cancel Booking
                               </span>
-                          </button>
-                        </div>)
+                            </button>
+                          </div>
+                        );
                       }
                       //Table 1 of booking
                       if (show) {
@@ -472,7 +517,6 @@ const Reserve = () => {
                                         id="reservation_partysize_selectreplace"
                                       >
                                         <button
-                                          type="button"
                                           type="submit"
                                           className="btn btn-green p-2"
                                         >
@@ -499,8 +543,7 @@ const Reserve = () => {
                             </button>
                           </div>
                         );
-                      }
-                      else if (showTwo) {
+                      } else if (showTwo) {
                         return (
                           <div>
                             <header className="engine__header">
@@ -523,18 +566,47 @@ const Reserve = () => {
                             </header>
                             <div className="opentable opentable--search">
                               <div className="row ">
-                                {TimeGetter(Booking_Date, Time).map(
-                                  (arr, key) => (
-                                    <div key={key} className="col-3 mt-3 ">
-                                      <button
-                                        onClick={() => TableThree(arr)}
-                                        className="btn btn-green opentable-slots__time"
-                                      >
-                                        <span>{arr}</span>
-                                      </button>
+                                {SlotsFind.map((arr, key) => (
+                                  <div key={key} className="col-3 mt-3 ">
+                                    <button
+                                      onClick={() => TableThree(arr)}
+                                      className="btn btn-green opentable-slots__time"
+                                    >
+                                      <span>{arr}</span>
+                                    </button>
+                                  </div>
+                                ))}
+
+                                {NoDataFound ? (
+                                  <div className="">
+                                    <div className="col-12">
+                                      <div className="contact-form-area">
+                                        <div className="row">
+                                          <div className="col-12 text-center mt-4">
+                                            <h6>
+                                              Oops! not Slots are available
+                                              Please search again
+                                            </h6>
+                                          </div>
+                                        </div>
+                                      </div>
                                     </div>
-                                  )
+                                  </div>
+                                ) : (
+                                  ""
                                 )}
+                                {/*{TimeGetter(Booking_Date, Time).map(*/}
+                                {/*  (arr, key) => (*/}
+                                {/*    <div key={key} className="col-3 mt-3 ">*/}
+                                {/*      <button*/}
+                                {/*        onClick={() => TableThree(arr)}*/}
+                                {/*        className="btn btn-green opentable-slots__time"*/}
+                                {/*      >*/}
+                                {/*        <span>{arr}</span>*/}
+                                {/*      </button>*/}
+                                {/*    </div>*/}
+                                {/*  )*/}
+                                {/*)}*/}
                               </div>
                             </div>
                             <header className="engine__header">
@@ -808,7 +880,8 @@ const Reserve = () => {
                                   </span>{" "}
                                   people at{" "}
                                   <span className="color-text-green">
-                                    {TimeConvert(BookingDetails.Booking_Time)}
+                                    {BookingDetails.Booking_Time}
+                                    {/*{TimeConvert(BookingDetails.Booking_Time)}*/}
                                   </span>{" "}
                                   {DateGetter(BookingDetails.Booking_Date)}.
                                 </p>
@@ -841,7 +914,8 @@ const Reserve = () => {
                                                 Booking Time:
                                               </span>
                                               <span className="text-muted text-hover-primary">
-                                                {TimeConvert(BookingDetails.Booking_Time)}
+                                                {BookingDetails.Booking_Time}
+                                                {/*{TimeConvert(BookingDetails.Booking_Time)}*/}
                                               </span>
                                             </div>
                                           </div>
@@ -851,7 +925,9 @@ const Reserve = () => {
                                                 Booking Date:
                                               </span>
                                               <span className="text-muted text-hover-primary">
-                                                {DateGetter(BookingDetails.Booking_Date)}
+                                                {DateGetter(
+                                                  BookingDetails.Booking_Date
+                                                )}
                                               </span>
                                             </div>
                                           </div>
@@ -993,68 +1069,67 @@ const Reserve = () => {
                               </div>
                             </header>
                             <div className="opentable opentable--search">
-                              <div>
-                                {BookingEmails.cancelBookingsData
-                                  .filter(
-                                    (arr) => arr.Status_booking === "Confirmed"
-                                  ).length===0?<div className="row text-center">
+                              {/*CARD*/}
+
+                              {BookingEmails.cancelBookingsData.filter(
+                                (arr) => arr.Status_booking === "Confirmed"
+                              ).length === 0 ? (
+                                <div className="row text-center">
                                   <div className="col-12 ">
                                     <p>No booking details found</p>
-                                    </div>
-                                  </div>:
-                                  BookingEmails.cancelBookingsData
-                                    .filter(
-                                      (arr) => arr.Status_booking === "Confirmed"
-                                    )
-                                    .map((arr, key) => (
-                                      <div key={key} className="col-6 mt-3 ">
-                                        <Card
-                                          style={{
-                                            textAlign: "left",
-                                            width: "18rem",
-                                          }}
-                                        >
-                                          <Card.Body>
-                                            <Card.Text>
-                                              Booking ID:{" "}
-                                              <span className="goldenrod_color">
+                                  </div>
+                                </div>
+                              ) : (
+                                BookingEmails.cancelBookingsData
+                                  .filter(
+                                    (arr) => arr.Status_booking === "Confirmed"
+                                  )
+                                  .map((arr, key) => (
+                                    <div key={key} className="col-4 mt-3 ">
+                                      <Card
+                                        style={{
+                                          textAlign: "left",
+                                          width: "18rem",
+                                        }}
+                                      >
+                                        <Card.Body>
+                                          <Card.Text>
+                                            Booking ID:{" "}
+                                            <span className="goldenrod_color">
                                               #{arr.BookingID}
                                             </span>
-                                            </Card.Text>
-                                            <Card.Text>
-                                              Name:&nbsp;
-                                              <span className="text-capitalize">
+                                          </Card.Text>
+                                          <Card.Text>
+                                            Name:&nbsp;
+                                            <span className="text-capitalize">
                                               {arr.First_Name}&nbsp;
-                                                {arr.Last_Name}
+                                              {arr.Last_Name}
                                             </span>
-                                              <br />
-                                              Party Size:&nbsp;{arr.Party_Size}
-                                              <br />
-                                              Email:&nbsp;{arr.Email}
-                                              <br />
-                                              {TimeConvert(
-                                                arr.Booking_Time
-                                              )} at {DateGetter(arr.Booking_Date)}
-                                              <button
-                                                onClick={() =>
-                                                  dispatch(
-                                                    CancelBookingViaBID(
-                                                      arr.BookingID
-                                                    )
+                                            <br />
+                                            Party Size:&nbsp;{arr.Party_Size}
+                                            <br />
+                                            Email:&nbsp;{arr.Email}
+                                            <br />
+                                            {arr.Booking_Time} at{" "}
+                                            {DateGetter(arr.Booking_Date)}
+                                            <button
+                                              onClick={() =>
+                                                dispatch(
+                                                  CancelBookingViaBID(
+                                                    arr.BookingID
                                                   )
-                                                }
-                                                className="btn btn-outline-danger opentable-slots__time"
-                                              >
-                                                <span>Cancel Booking</span>
-                                              </button>
-                                            </Card.Text>
-                                          </Card.Body>
-                                        </Card>
-                                      </div>
-                                    ))
-                                }
-
-                              </div>
+                                                )
+                                              }
+                                              className="btn btn-outline-danger opentable-slots__time"
+                                            >
+                                              <span>Cancel Booking</span>
+                                            </button>
+                                          </Card.Text>
+                                        </Card.Body>
+                                      </Card>
+                                    </div>
+                                  ))
+                              )}
                             </div>
                             <header className="engine__header">
                               <div className="engine__intro"></div>
@@ -1070,9 +1145,7 @@ const Reserve = () => {
                             </button>
                           </Fragment>
                         );
-                      }
-                      //Cancel Booking Searcher
-                      else if (CancelBookingBool) {
+                      } else if (CancelBookingBool) {
                         return (
                           <div>
                             <header className="engine__header">

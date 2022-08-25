@@ -13,6 +13,7 @@ import BookingCover2 from "./BookingCover2Reducers";
 import Bookings from "./BookingsReducers";
 import cancelArray from "./CancelBookingbid";
 import cancelBookingsData from "./CancelBookingEReducer";
+import CheckBookingArray from "./CheckBookingReducer";
 
 export default combineReducers({
   Menu,
@@ -23,10 +24,11 @@ export default combineReducers({
   AboutUsArray,
   TimingsArray,
   MenuCarousel,
+  cancelArray,
   BookingCover,
   CarouselPosts,
   BookingCover2,
   InstagramPosts,
-  cancelArray,
+  CheckBookingArray,
   cancelBookingsData,
 });

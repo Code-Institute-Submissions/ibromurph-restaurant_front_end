@@ -44,11 +44,11 @@ export const deleteBooking = (id) => (dispatch, getState) => {
 };
 export const addBooking = (data) => (dispatch, getState) => {
   dispatch({ type: LOADING_BOOKINGS_POST });
+
   axios
     .post(url, data)
     .then((res) => {
       dispatch(createMessage({ addLead: "Booking Added" }));
-      console.log(res.data,"in action")
       dispatch({
         type: ADD_BOOKING,
         payload: res.data,

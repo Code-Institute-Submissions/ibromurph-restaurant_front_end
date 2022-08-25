@@ -14,7 +14,6 @@ class Alerts extends Component {
   componentDidUpdate(prevProps) {
     const { error, alert, message } = this.props;
     if (error !== prevProps.error) {
-      console.log(error,"err")
       if (error.msg.name) toast.error(`Name:${error.msg.name.join()}`);
       if (error.msg.email) toast.error(`Email:${error.msg.email.join()}`);
       if (error.msg.message) toast.error(`Message:${error.msg.message}`);

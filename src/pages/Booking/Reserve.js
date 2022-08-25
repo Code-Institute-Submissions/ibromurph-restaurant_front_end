@@ -1069,22 +1069,21 @@ const Reserve = () => {
                             </header>
                             <div className="opentable opentable--search">
                               {/*CARD*/}
+                              <div className="row text-center">
 
                               {BookingEmails.cancelBookingsData.filter(
                                 (arr) => arr.Status_booking === "Confirmed"
                               ).length === 0 ? (
-                                <div className="row text-center">
-                                  <div className="col-12 ">
+                                  <div className="col-12">
                                     <p>No booking details found</p>
                                   </div>
-                                </div>
                               ) : (
                                 BookingEmails.cancelBookingsData
                                   .filter(
                                     (arr) => arr.Status_booking === "Confirmed"
                                   )
                                   .map((arr, key) => (
-                                    <div key={key} className="col-4 mt-3 ">
+                                    <div key={key} style={{width:'100%'}} className="col-12 col-lg-6 mt-3  col d-flex justify-content-center">
                                       <Card
                                         style={{
                                           textAlign: "left",
@@ -1129,6 +1128,8 @@ const Reserve = () => {
                                     </div>
                                   ))
                               )}
+                              </div>
+
                             </div>
                             <header className="engine__header">
                               <div className="engine__intro"></div>

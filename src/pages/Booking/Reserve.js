@@ -12,7 +12,6 @@ import { getBookingCover } from "../../actions/Booking/bookingCoverAction";
 import { getBookingCover2 } from "../../actions/Booking/bookingCover2Action";
 import DateGetter from "../../Functions/DayGetter";
 import { addBooking } from "../../actions/Booking/BookingAction";
-import TimeConvert from "../../Functions/TimeConvert";
 import {
   CancelBookingViaBID,
   CancelBookingViaEmail,

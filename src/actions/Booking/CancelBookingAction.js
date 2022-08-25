@@ -8,6 +8,7 @@ import {
   GET_BOOKINGS_EMAIL,
   CANCEL_BOOKING_BID_LOADING,
 } from "../types";
+import toast from "react-hot-toast";
 
 export const CancelBookingViaBID = (BookingID) => (dispatch, getState) => {
   dispatch({ type: CANCEL_BOOKING_BID_LOADING });
@@ -29,17 +30,24 @@ export const CancelBookingViaBID = (BookingID) => (dispatch, getState) => {
 
 export const CancelBookingViaEmail = (Email) => (dispatch, getState) => {
   dispatch({ type: LOADING_BOOKING_DETAILS_EMAIL });
-  axios
-    .get(`booking/CancelBookingEmail/${Email}/`)
-    .then((res) => {
-      dispatch(createMessage({ addLead: "Fetching Bookings" }));
-      dispatch({
-        type: GET_BOOKINGS_EMAIL,
-        payload: res.data,
-      });
-    })
-    .catch((err) => {
-      dispatch({ type: ERROR_BOOKING_DETAILS_EMAIL });
-      dispatch(returnErrors(err.response.data, err.response.status));
-    });
+  // toast.promise(
+    axios
+      .get(`booking/CancelBookingEmail/${Email}/`)
+      .then((res) => {
+        dispatch(createMessage({ addLead: "Fetching Bookings" }));
+        dispatch({
+          type: GET_BOOKINGS_EMAIL,
+          payload: res.data,
+        });
+      })
+      .catch((err) => {
+        dispatch({ type: ERROR_BOOKING_DETAILS_EMAIL });
+        dispatch(returnErrors(err.response.data, err.response.status));
+      })
+    // {
+    //   loading: "Fetching Bookings details",
+    //   // success: "Bookings Cancelledxj",
+    //   // error: (err) => err.response.data.details,
+    // }
+  // );
 };

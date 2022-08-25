@@ -14,6 +14,7 @@ class Alerts extends Component {
   componentDidUpdate(prevProps) {
     const { error, alert, message } = this.props;
     if (error !== prevProps.error) {
+      console.log(error,"err")
       if (error.msg.name) toast.error(`Name:${error.msg.name.join()}`);
       if (error.msg.email) toast.error(`Email:${error.msg.email.join()}`);
       if (error.msg.message) toast.error(`Message:${error.msg.message}`);
@@ -21,9 +22,10 @@ class Alerts extends Component {
       if (error.msg.Error) toast.error(error.msg.Error.join());
       if (error.msg.username) toast.error(error.msg.username.join());
       if (error.msg.detail) toast.error(error.msg.detail);
-      if (message) toast.error(`Message:${message}`);
     }
     if (message !== prevProps.message) {
+      // console.log(message,"xx")
+      // if (message) toast.error(`Message:${message}`);
       if (message.deleteLead) toast.error(message.deleteLead);
       if (message.addLead) toast.success(message.addLead);
       if (message.LeadUpdate) toast.success(message.LeadUpdate);

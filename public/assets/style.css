@@ -4460,10 +4460,11 @@ select.input {
     color: #b68948;
 }
 
-.golden__color{
+.golden__color {
     color: #b68948;
 
 }
+
 .menu__time + .menu__time {
     margin-top: 30px
 }
@@ -4489,7 +4490,11 @@ select.input {
 }
 
 
-.goldenrod_color
-{
+.goldenrod_color {
     color: goldenrod !important;
+}
+
+.green_active {
+    color: #40ba37 !important;
+
 }

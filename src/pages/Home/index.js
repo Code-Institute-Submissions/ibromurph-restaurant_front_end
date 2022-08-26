@@ -1,6 +1,7 @@
 import { Component, Fragment } from "react";
 import Instagram from "../Instagram";
-import Navbar from "../Navbar";
+import Navbar_hock from "../Navbar";
+
 import Footer from "../Footer";
 import { Carousel } from "react-bootstrap";
 import { connect } from "react-redux";
@@ -35,7 +36,7 @@ class Home extends Component {
     const { CarouselPosts, TimingsArray, AboutUsArray ,HomePageImg} = this.props;
     return (
       <Fragment>
-        <Navbar />
+        <Navbar_hock/>
         <Carousel>
           {CarouselPosts.map((arr, key) => (
             <Carousel.Item key={key}>

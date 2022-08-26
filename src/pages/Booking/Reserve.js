@@ -1,5 +1,6 @@
 import { Fragment, useEffect, useState } from "react";
-import Navbar from "../Navbar";
+import Navbar_hock from "../Navbar";
+
 import Instagram from "../Instagram";
 import Footer from "../Footer";
 import { Card, Col, Form, Row } from "react-bootstrap";
@@ -243,7 +244,7 @@ const Reserve = () => {
 
   return (
     <Fragment>
-      <Navbar />
+      <Navbar_hock/>
       {BookingCover.length !== 0 ? (
         <div
           className="breadcumb-area bg-img bg-overlay"

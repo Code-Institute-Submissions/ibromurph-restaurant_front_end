@@ -1,5 +1,6 @@
 import { Fragment, useEffect } from "react";
-import Navbar from "../Navbar";
+import Navbar_hock from "../Navbar";
+
 import Instagram from "../Instagram";
 import Footer from "../Footer";
 import { getMenuCarousel } from "../../actions/MenuCarousel/MenuCarouselAction";
@@ -22,7 +23,7 @@ const MenuPage = () => {
   const MenuItems = useSelector((state) => state.Menu.Menu);
   return (
     <Fragment>
-      <Navbar />
+      <Navbar_hock/>
       <Carousel>
         {Images.map((arr, key) => (
           <Carousel.Item key={key}>

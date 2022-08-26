@@ -1,5 +1,6 @@
 import {Fragment, useEffect} from "react";
-import Navbar from "../Navbar";
+import Navbar_hock from "../Navbar";
+
 import Instagram from "../Instagram";
 import Footer from "../Footer";
 import { Formik } from "formik";
@@ -35,7 +36,7 @@ const Contact = () => {
   return (
     <Fragment>
       <div>
-        <Navbar />
+        <Navbar_hock/>
         <div
           className="breadcumb-area bg-img bg-overlay"
           style={{ backgroundImage: `url(${aboutUsPage!==undefined?aboutUsPage.Image:''})` }}

@@ -1,5 +1,6 @@
 import {Fragment} from "react";
-import Navbar from "../Navbar";
+import Navbar_hock from "../Navbar";
+
 import breadcumb5 from '../../assets/img/bg-img/breadcumb5.jpg'
 import salad from '../../assets/img/core-img/salad.png'
 import hamburger from '../../assets/img/core-img/hamburger.png'

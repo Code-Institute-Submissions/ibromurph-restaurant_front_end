@@ -1,5 +1,6 @@
 import { Fragment, useEffect } from "react";
-import Navbar from "../Navbar";
+import Navbar_hock from "../Navbar";
+
 import Instagram from "../Instagram";
 import Footer from "../Footer";
 import { useSelector, useDispatch } from "react-redux";
@@ -30,7 +31,7 @@ const About = () => {
   return (
     <Fragment>
       <div>
-        <Navbar />
+        <Navbar_hock/>
         {/* ##### Breadcumb Area Start ##### */}
         <div
           className="breadcumb-area bg-img bg-overlay"

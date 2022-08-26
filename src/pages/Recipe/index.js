@@ -1,5 +1,6 @@
 import {Fragment} from "react";
-import Navbar from "../Navbar";
+import Navbar_hock from "../Navbar";
+
 import Instagram from "../Instagram";
 import Footer from "../Footer";
 import breadcumb3 from '../../assets/img/bg-img/breadcumb3.jpg'

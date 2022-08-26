@@ -3,8 +3,11 @@ import { Link } from "react-router-dom";
 import { useLocation } from "react-router-dom";
 import { useDispatch, useSelector } from "react-redux";
 import { getBrandLogo } from "../../actions/BrandLogo/BrandLogoAction";
+import Container from "react-bootstrap/Container";
+import Nav from "react-bootstrap/Nav";
+import Navbar from "react-bootstrap/Navbar";
 
-const Navbar = () => {
+const Navbar_hock = () => {
   const location = useLocation();
   const dispatch = useDispatch();
   const Logo = useSelector((state) => state.LogoArray.LogoArray[0]);
@@ -16,100 +19,55 @@ const Navbar = () => {
 
   return (
     <Fragment>
-      <header className="header-area">
-        <div className="top-header-area">
-          <div className="container h-100">
-            <div className="row h-100 align-items-center justify-content-between">
-              {/* Breaking News */}
-              <div className="col-12 col-sm-6">
-                <div className="breaking-news">
-                  <div className="address_header">
-                    <ul>
-                      <li>{/*<a> Something here</a>*/}</li>
-                    </ul>
-                  </div>
-                </div>
-              </div>
-              {/* Top Social Info */}
-              <div className="col-12 col-sm-6 text-center">
-                <Link
-                  to="/Reserve"
-                  className="header-reserve btn button-header"
-                >
-                  <span>Reserve a table</span>
-                </Link>
-              </div>
-            </div>
-          </div>
-        </div>
-        <div className="delicious-main-menu">
-          <div className="classy-nav-container breakpoint-off">
-            <div className="container">
-              <nav
-                className="classy-navbar justify-content-between"
-                id="deliciousNav"
+      <Navbar bg="light" expand="lg">
+        <Container>
+          <Navbar.Brand href="/">
+            <img src={Logo !== undefined ? Logo.Logo : ""} alt="" />
+          </Navbar.Brand>
+          <Navbar.Toggle aria-controls="basic-navbar-nav" />
+          <Navbar.Collapse id="basic-navbar-nav">
+            <Nav className="mx-auto">
+              <Nav.Link
+                href="/"
+                className={splitLocation[1] === "" ? "green_active" : ""}
               >
-                <Link className="nav-brand" to="/">
-                  <img src={Logo !== undefined ? Logo.Logo : ""} alt="" />
-                </Link>
-                <div className="classy-navbar-toggler">
-                  <span className="navbarToggler">
-                    <span />
-                    <span />
-                    <span />
-                  </span>
-                </div>
-                {/* Menu */}
-                <div className="classy-menu">
-                  {/* close btn */}
-                  <div className="classycloseIcon">
-                    <div className="cross-wrap">
-                      <span className="top" />
-                      <span className="bottom" />
-                    </div>
-                  </div>
-                  <div className="classynav">
-                    <ul>
-                      <li className={splitLocation[1] === "" ? "active" : ""}>
-                        <Link to="/">Home</Link>
-                      </li>
-                      <li
-                        className={splitLocation[1] === "About" ? "active" : ""}
-                      >
-                        <Link to="/About">About Us</Link>
-                      </li>
-                      <li
-                        className={splitLocation[1] === "Menu" ? "active" : ""}
-                      >
-                        <Link to="/Menu">Menu</Link>
-                      </li>
-                      <li
-                        className={
-                          splitLocation[1] === "Contact" ? "active" : ""
-                        }
-                      >
-                        <Link to="/Contact">Contact</Link>
-                      </li>
-                      <li
-                        className={
-                          splitLocation[1] === "Reserve" ? "active" : ""
-                        }
-                      >
-                        <Link to="/Reserve">Reserve</Link>
-                      </li>
-                    </ul>
-                    <div className="search-btn">
-                      <i className="fa fa-search" aria-hidden="true" />
-                    </div>
-                  </div>
-                </div>
-              </nav>
-            </div>
-          </div>
-        </div>
-      </header>
+                Home
+              </Nav.Link>
+              <Nav.Link
+                href="/About"
+                className={splitLocation[1] === "About" ? "green_active" : ""}
+              >
+                About us
+              </Nav.Link>
+              <Nav.Link
+                href="/Menu"
+                className={splitLocation[1] === "Menu" ? "green_active" : ""}
+              >
+                Menu
+              </Nav.Link>
+              <Nav.Link
+                href="/Contact"
+                className={splitLocation[1] === "Contact" ? "green_active" : ""}
+              >
+                Contact us
+              </Nav.Link>
+              <Nav.Link
+                href="/Reserve"
+                className={splitLocation[1] === "Reserve" ? "green_active" : ""}
+              >
+                Reserve Booking
+              </Nav.Link>
+            </Nav>
+            <Nav className="ml-auto">
+              <Link to="/Reserve" className="header-reserve btn button-header">
+                <span>Reserve a table</span>
+              </Link>
+            </Nav>
+          </Navbar.Collapse>
+        </Container>
+      </Navbar>
     </Fragment>
   );
 };
 
-export default Navbar;
+export default Navbar_hock;

@@ -1,12 +1,19 @@
-import { Fragment } from "react";
-import logo from "../../assets/img/core-img/logo.png";
+import { Fragment, useEffect } from "react";
 import { Link } from "react-router-dom";
 import { useLocation } from "react-router-dom";
+import { useDispatch, useSelector } from "react-redux";
+import { getBrandLogo } from "../../actions/BrandLogo/BrandLogoAction";
 
 const Navbar = () => {
   const location = useLocation();
+  const dispatch = useDispatch();
+  const Logo = useSelector((state) => state.LogoArray.LogoArray[0]);
+  useEffect(() => {
+    dispatch(getBrandLogo());
+  }, []);
   const { pathname } = location;
   const splitLocation = pathname.split("/");
+
   return (
     <Fragment>
       <header className="header-area">
@@ -43,7 +50,7 @@ const Navbar = () => {
                 id="deliciousNav"
               >
                 <Link className="nav-brand" to="/">
-                  <img src={logo} alt="" />
+                  <img src={Logo !== undefined ? Logo.Logo : ""} alt="" />
                 </Link>
                 <div className="classy-navbar-toggler">
                   <span className="navbarToggler">
@@ -72,18 +79,9 @@ const Navbar = () => {
                         <Link to="/About">About Us</Link>
                       </li>
                       <li
-                        className={
-                          splitLocation[1] === "Menu" ? "active" : ""
-                        }
+                        className={splitLocation[1] === "Menu" ? "active" : ""}
                       >
                         <Link to="/Menu">Menu</Link>
-                      </li>
-                      <li
-                        className={
-                          splitLocation[1] === "Recipe" ? "active" : ""
-                        }
-                      >
-                        <Link to="/Recipe">Recipe Post</Link>
                       </li>
                       <li
                         className={

@@ -1,5 +1,4 @@
 import { BrowserRouter, Route, Routes } from "react-router-dom";
-// import {useSelector} from "react-redux";
 import Home from "../pages/Home";
 import About from "../pages/About";
 import MenuPage from "../pages/MenuPage";
@@ -9,7 +8,6 @@ import Recipe from "../pages/Recipe";
 import Reserve from "../pages/Booking/Reserve";
 import {Fragment} from "react";
 import Alerts from "../actions/Alerts/Alerts";
-
 const Navigation = () => {
   return (
     <Fragment>

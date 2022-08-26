@@ -14,17 +14,25 @@ import Bookings from "./BookingsReducers";
 import cancelArray from "./CancelBookingbid";
 import cancelBookingsData from "./CancelBookingEReducer";
 import CheckBookingArray from "./CheckBookingReducer";
+import findUsArray from "./FindUsReducers";
+import AboutUsPage from "./AboutUsPageReducers";
+import LogoArray from "./BrandLogoReducer";
+import SocialMedia from "./SocialMediaReducers";
 
 export default combineReducers({
   Menu,
   errors,
   message,
   Bookings,
+  LogoArray,
   HomePageImg,
   AboutUsArray,
   TimingsArray,
-  MenuCarousel,
   cancelArray,
+  AboutUsPage,
+  findUsArray,
+  MenuCarousel,
+  SocialMedia,
   BookingCover,
   CarouselPosts,
   BookingCover2,

@@ -47,8 +47,8 @@ const schemaCancelBooking = yup.object().shape(
 );
 
 const schemaBookTableDetails = yup.object({
-  First_Name: yup.string().required("What's you First name?"),
-  Last_Name: yup.string().required("What's you Last name?"),
+  First_Name: yup.string().required("What's your First name?"),
+  Last_Name: yup.string().required("What's your Last name?"),
   Email: yup.string().email().required("You might need your email later!"),
   Number: yup.string().required("We may need to Contact you for confirmation"),
 });

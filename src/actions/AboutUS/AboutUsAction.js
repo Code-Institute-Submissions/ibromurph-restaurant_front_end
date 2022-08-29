@@ -6,7 +6,7 @@ import {
   LOADING_ABOUT_US_POST,
 } from "../types";
 
-export const getAbout_Us = () => (dispatch, getState) => {
+export const getAbout_Us = () => (dispatch) => {
   dispatch({ type: LOADING_ABOUT_US_POST });
   axios
     .get("content/AboutUsAPI/")

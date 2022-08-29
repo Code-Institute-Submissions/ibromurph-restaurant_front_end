@@ -1,6 +1,4 @@
 import {Fragment} from "react";
-import Navbar_hock from "../Navbar";
-
 import breadcumb5 from '../../assets/img/bg-img/breadcumb5.jpg'
 import salad from '../../assets/img/core-img/salad.png'
 import hamburger from '../../assets/img/core-img/hamburger.png'
@@ -11,12 +9,11 @@ import rib from '../../assets/img/core-img/rib.png'
 import pancakes from '../../assets/img/core-img/pancake.png'
 import Instagram from "../Instagram";
 import Footer from "../Footer";
-
 const Elements = () => {
   return (
     <Fragment>
       <div>
-        <Navbar/>
+        {/*<Navbar/>*/}
         {/* ##### Breadcumb Area Start ##### */}
         <div className="breadcumb-area bg-img bg-overlay" style={{backgroundImage: `url(${breadcumb5})`}}>
           <div className="container h-100">
@@ -290,7 +287,6 @@ const Elements = () => {
         <Instagram/>
         <Footer/>
       </div>
-
     </Fragment>
   )
 }

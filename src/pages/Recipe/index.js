@@ -1,5 +1,5 @@
 import {Fragment} from "react";
-import Navbar_hock from "../Navbar";
+import Navbar from "../Navbar";
 
 import Instagram from "../Instagram";
 import Footer from "../Footer";

@@ -84,13 +84,7 @@ const Footer = () => {
               </a>
             </div>
             <p>
-              Copyright ©{year} All rights reserved | A Website by{" "}
-              <a
-                href="https://www.linkedin.com/in/abdullahrafi1/"
-                target="_blank"
-              >
-                AR Studio
-              </a>
+              Copyright ©{year} All rights reserved
             </p>
           </div>
         </div>
